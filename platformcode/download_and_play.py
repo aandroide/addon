@@ -143,7 +143,7 @@ class DownloadThread(threading.Thread):
         self.total_size = 0
 
         if os.path.exists(self.force_stop_file_name):
-            os.remove(self.force_stop_file_name)
+            #os.remove(self.force_stop_file_name)
 
         threading.Thread.__init__(self)
 
