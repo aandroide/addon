@@ -66,7 +66,7 @@
 							<height>60</height>
 							<font>font13</font>
 							<textcolor>FFFFFFFF</textcolor>
-							<label>[B]$INFO[ListItem.Property(title)][/B] $ADDON[plugin.video.kod 30140]: $INFO[ListItem.Property(seasons)] $ADDON[plugin.video.kod 70362]: $INFO[ListItem.Property(episodes)]</label>
+							<label>[B]$INFO[ListItem.Property(title)][/B] $ADDON[plugin.video.s4me 30140]: $INFO[ListItem.Property(seasons)] $ADDON[plugin.video.s4me 70362]: $INFO[ListItem.Property(episodes)]</label>
 							<align>left</align>
 							<aligny>center</aligny>
 						</control>
@@ -86,7 +86,7 @@
 							<height>160</height>
 							<font>font13</font>
 							<textcolor>FFFFFFFF</textcolor>
-							<label>[B]$INFO[ListItem.Property(title)][/B] $ADDON[plugin.video.kod 30140]: $INFO[ListItem.Property(seasons)] $ADDON[plugin.video.kod 70362]: $INFO[ListItem.Property(episodes)]$INFO[ListItem.Property(description)]</label>
+							<label>[B]$INFO[ListItem.Property(title)][/B] $ADDON[plugin.video.s4me 30140]: $INFO[ListItem.Property(seasons)] $ADDON[plugin.video.s4me 70362]: $INFO[ListItem.Property(episodes)]$INFO[ListItem.Property(description)]</label>
                             <autoscroll time="3000" delay="3000" repeat="3000">True</autoscroll>
 							<align>left</align>
 							<aligny>center</aligny>

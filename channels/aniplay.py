@@ -84,7 +84,7 @@ def submenu_top_of(item):
         title = fulltitle.split('(')[0].strip()
         scrapedlang = scrapertools.find_single_match(fulltitle, r'\(([^\)]+)')
         lang = scrapedlang.upper() if scrapedlang else 'Sub-ITA'
-        long_title = support.typo(title, 'bold') + support.typo(lang, '_ [] color kod')
+        long_title = support.typo(title, 'bold') + support.typo(lang, '_ [] color std')
 
         itemlist.append(item.clone(title=long_title,
                                    url = '{}/anime/{}'.format(host, anime['animeId']),
@@ -134,7 +134,7 @@ def latest_added(item):
         title = episode['title'] if episode['title'] else ''
         animeTitle, lang =  get_lang(episode['animeTitle'])
         quality = 'Full HD' if episode['fullHd'] else 'HD'
-        long_title = support.typo('{}. {}{}'.format(int(float(episode['episodeNumber'])), title + ' - ' if title else '', animeTitle), 'bold') + support.typo(lang, '_ [] color kod') + support.typo(quality, '_ [] color kod')
+        long_title = support.typo('{}. {}{}'.format(int(float(episode['episodeNumber'])), title + ' - ' if title else '', animeTitle), 'bold') + support.typo(lang, '_ [] color std') + support.typo(quality, '_ [] color std')
         image = get_thumbnail(episode, 'episodeImages')
 
         itemlist.append(item.clone(title=long_title,
@@ -168,7 +168,7 @@ def peliculas(item):
         logger.debug(jsontools.dump(js))
         title, lang = get_lang(it['title'])
 
-        long_title = support.typo(title, 'bold') + support.typo(lang, '_ [] color kod')
+        long_title = support.typo(title, 'bold') + support.typo(lang, '_ [] color std')
 
         itemlist.append(item.clone(title = long_title,
                                    fulltitle = title,

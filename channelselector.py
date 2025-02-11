@@ -33,7 +33,7 @@ def getmainlist(view="thumb_"):
                              thumbnail=get_thumb("on_the_air.png"), viewmode="thumbnails"))
 
     if addon.getSetting('enable_link_menu') == "true":
-        itemlist.append(Item(title=config.get_localized_string(70527), channel="kodfavorites", action="mainlist", thumbnail=get_thumb("mylink.png", view),
+        itemlist.append(Item(title=config.get_localized_string(70527), channel="addonfavorites", action="mainlist", thumbnail=get_thumb("mylink.png", view),
                              view=view, category=config.get_localized_string(70527), viewmode="thumbnails"))
 
     if addon.getSetting('enable_fav_menu') == "true":
@@ -213,7 +213,7 @@ def get_thumb(thumb_name, view="thumb_"):
         media_path = config.get_setting('custom_theme')
     else:
         icon_pack_name = config.get_setting('icon_set', default="default")
-        media_path = filetools.join("https://raw.githubusercontent.com/kodiondemand/media/master/themes", icon_pack_name)
+        media_path = filetools.join("https://raw.githubusercontent.com/Stream4me/media/master/themes", icon_pack_name)
     return filetools.join(media_path, view + thumb_name)
 
 

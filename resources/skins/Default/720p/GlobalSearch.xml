@@ -645,7 +645,7 @@
             <shadowcolor>00000000</shadowcolor>
             <align>center</align>
             <aligny>center</aligny>
-            <label>[UPPERCASE]$ADDON[plugin.video.kod 60473][/UPPERCASE]</label>
+            <label>[UPPERCASE]$ADDON[plugin.video.s4me 60473][/UPPERCASE]</label>
             <visible>Control.IsVisible(4)</visible>
         </control>
 
@@ -660,7 +660,7 @@
             <shadowcolor>00000000</shadowcolor>
             <align>center</align>
             <aligny>center</aligny>
-            <label>[UPPERCASE]$ADDON[plugin.video.kod 60519][/UPPERCASE]</label>
+            <label>[UPPERCASE]$ADDON[plugin.video.s4me 60519][/UPPERCASE]</label>
             <visible>Control.IsVisible(5)</visible>
         </control>
 

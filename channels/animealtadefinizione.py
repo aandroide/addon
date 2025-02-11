@@ -94,7 +94,7 @@ def peliculas(item):
             itemlist = [ it for it in itemlist if ' Episodio ' not in it.title ]
         if len(itemlist) == int(perpage):
             item.pag += 1
-            itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color kod bold'), action='peliculas'))
+            itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color std bold'), action='peliculas'))
         return itemlist
     return locals()
 

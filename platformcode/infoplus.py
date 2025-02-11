@@ -199,7 +199,7 @@ class SearchWindow(xbmcgui.WindowXMLDialog):
                     for key, value in item.infoLabels.items():
                         it.setProperty(key, str(value))
                     if item.action == 'play':
-                        it.setProperty('thumbnail', "https://raw.githubusercontent.com/kodiondemand/media/master/resources/servers/%s.png" % item.server.lower())
+                        it.setProperty('thumbnail', "https://raw.githubusercontent.com/Stream4me/media/master/resources/servers/%s.png" % item.server.lower())
                     self.items.append(it)
                     self.itemlist.append(item)
             if itemlist[0].contentType == 'movie':

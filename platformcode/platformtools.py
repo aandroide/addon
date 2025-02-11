@@ -342,9 +342,9 @@ def render_items(itemlist, parent_item):
         item_url = item.tourl()
         if item.thumbnail == parent_item.thumbnail and parent_item.action in ['peliculas', 'search']:
             if item.contentType in ['movie', 'undefined']:
-                item.thumbnail = 'https://raw.githubusercontent.com/kodiondemand/media/master/null/movie.png'
+                item.thumbnail = 'https://raw.githubusercontent.com/Stream4me/media/master/null/movie.png'
             else:
-                item.thumbnail = 'https://raw.githubusercontent.com/kodiondemand/media/master/null/tv.png'
+                item.thumbnail = 'https://raw.githubusercontent.com/Stream4me/media/master/null/tv.png'
         if item.category == "":
             item.category = parent_item.category
         # If there is no action or it is findvideos / play, folder = False because no listing will be returned
@@ -442,7 +442,7 @@ def viewmodeMonitor():
     if get_window() == 'WINDOW_VIDEO_NAV':
         try:
             parent_info = xbmc.getInfoLabel('Container.FolderPath')
-            if 'plugin.video.kod' in parent_info:
+            if 'plugin.video.s4me' in parent_info:
                 parent = Item().fromurl(parent_info, silent=True)
                 item = Item().fromurl(xbmc.getInfoLabel('Container.ListItemPosition(2).FileNameAndPath'), silent=True)
                 currentModeName = xbmc.getInfoLabel('Container.Viewmode')
@@ -685,15 +685,15 @@ def set_context_commands(item, item_url, parent_item, **kwargs):
 
             # If you are not inside Alphavorites and there are the contexts for Alphavorites, discard them.
             # (it happens when going to a link of alfavoritos, if this is cloned in the channel)
-            if parent_item.channel != 'kodfavorites' and 'i_perfil' in command and 'i_enlace' in command:
+            if parent_item.channel != 'addonfavorites' and 'i_perfil' in command and 'i_enlace' in command:
                 continue
 
             if "goto" in command:
                 context_commands.append((command["title"], "Container.Refresh (%s?%s)" % (sys.argv[0], item.clone(**command).tourl())))
             else:
                 context_commands.append((command["title"], "RunPlugin(%s?%s)" % (sys.argv[0], item.clone(**command).tourl())))
-    # Do not add more predefined options if you are inside kodfavoritos
-    if parent_item.channel == 'kodfavorites':
+    # Do not add more predefined options if you are inside addonfavoritos
+    if parent_item.channel == 'addonfavorites':
         if config.dev_mode():
             context_commands.insert(0, ("item info", "Container.Update (%s?%s)" % (sys.argv[0], Item(action="itemInfo", parent=item.tojson()).tourl())))
         return context_commands
@@ -725,11 +725,11 @@ def set_context_commands(item, item_url, parent_item, **kwargs):
         if (item.contentTitle and item.contentType in ['movie', 'tvshow']) or "buscar_trailer" in context:
             context_commands.append((config.get_localized_string(60359), "RunPlugin(%s?%s&%s)" % (sys.argv[0], item_url, urllib.urlencode({ 'channel': "trailertools", 'action': "buscartrailer", 'search_title': item.contentTitle if item.contentTitle else item.fulltitle, 'contextual': True}))))
 
-        # Add to kodfavoritos (My links)
-        if item.channel not in ["favorites", "videolibrary", "help", ""] and parent_item.channel != "favorites" and parent_item.from_channel != "kodfavorites":
-            context_commands.append( (config.get_localized_string(70557), "RunPlugin(%s?%s&%s)" % (sys.argv[0], item_url, urllib.urlencode({'channel': "kodfavorites", 'action': "addFavourite", 'from_channel': item.channel, 'from_action': item.action}))))
+        # Add to addonfavoritos (My links)
+        if item.channel not in ["favorites", "videolibrary", "help", ""] and parent_item.channel != "favorites" and parent_item.from_channel != "addonfavorites":
+            context_commands.append( (config.get_localized_string(70557), "RunPlugin(%s?%s&%s)" % (sys.argv[0], item_url, urllib.urlencode({'channel': "addonfavorites", 'action': "addFavourite", 'from_channel': item.channel, 'from_action': item.action}))))
 
-        # Add to kodfavoritos
+        # Add to addonfavoritos
         if parent_item.channel == 'globalsearch':
             context_commands.append( (config.get_localized_string(30155), "RunPlugin(%s?%s&%s)" % (sys.argv[0], item_url, urllib.urlencode({'channel': "favorites", 'action': "addFavourite", 'from_channel': item.channel, 'from_action': item.action}))))
 
@@ -1087,7 +1087,7 @@ def play_video(item, strm=False, force_direct=False, autoplay=False):
         # we get the selected video
         mediaurl, view, mpd, hls = get_video_seleccionado(item, seleccion, video_urls, autoplay)
         if not mediaurl: return
-        # to better disguise KoD as a browser
+        # to better disguise S4Me as a browser
         headers = httptools.default_headers
         headers['Referer'] = item.referer if item.server == 'directo' else item.url
         # Kodi does not seems to allow this, leaving there as may work in the future
@@ -1563,7 +1563,7 @@ def add_next_to_playlist(item):
                 nextItem = xbmcgui.ListItem(item_nfo.fulltitle, path=item_nfo.url)
                 nextItem.setArt({"thumb": item_nfo.contentThumbnail if item_nfo.contentThumbnail else item_nfo.thumbnail})
                 set_infolabels(nextItem, item_nfo, True)
-                nexturl = "plugin://plugin.video.kod/?" + next.tourl()
+                nexturl = "plugin://plugin.video.s4me/?" + next.tourl()
                 playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
                 playlist.add(nexturl, nextItem)
                 add_to_playlist(next)
@@ -1813,7 +1813,7 @@ def prevent_busy():
 
 def fakeVideo(sleep = False):
     if len(sys.argv) > 1:
-        mediaurl = os.path.join(config.get_runtime_path(), "resources", "kod.mp4")
+        mediaurl = os.path.join(config.get_runtime_path(), "resources", "fakevideo.mp4")
         xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, xbmcgui.ListItem(path=mediaurl))
         while not is_playing():
             xbmc.sleep(200)

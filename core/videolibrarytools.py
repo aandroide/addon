@@ -416,7 +416,7 @@ def filter_list(episodelist, action=None, path=None):
 
     return episodelist
 
-def save_tvshow(item, episodelist, silent=False):
+def save_tvshow(item, episodelist, silent=False, override_active = False):
     """
     stores in the series library the series with all the chapters included in the episodelist
     @type item: item
@@ -541,8 +541,10 @@ def save_tvshow(item, episodelist, silent=False):
             else:
                 item_tvshow.library_filter_show = {item.channel: item.show}
 
-    if item.channel != "downloads":
+    if item.channel != "downloads" and not override_active :
         item_tvshow.active = 1  # to be updated daily when service is called
+    else:
+        item_tvshow.active = item.active
 
     filetools.write(tvshow_path, head_nfo + item_tvshow.tojson())
 

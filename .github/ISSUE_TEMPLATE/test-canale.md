@@ -14,7 +14,7 @@ Se hai **suggerimenti/consigli/dubbi sul test**...Proponili e/o Chiedi! Scrivend
 **Avvertenze:**
 
 Per il test dei canali **DEVI**:
-- utilizzare la versione **[BETA](https://kodiondemand.github.io/repo/KoD-installer-BETA.zip)** di KOD!
+- utilizzare la versione **[BETA](https://stream4me.github.io/repo/S4Me-installer.zip)** di S4Me!
 - **ABILITARE IL DEBUG PER I LOG**
 
 **Per eseguire il test, ricordati di titolarlo con il nome del canale da te scelto, e salvare la pagina cliccando sul bottone verde in basso "SUBMIT NEW ISSUE"**
@@ -35,9 +35,9 @@ Se hai problemi non previsti dal test, segnalali aggiungendoli in fondo al test.
 ***
 I file relativi al canale li trovi:
 - su browser:
-[Apre la pagina dei Canali](https://github.com/kodiondemand/addon/tree/master/channels)
+[Apre la pagina dei Canali](https://github.com/stream4me/addon/tree/master/channels)
 - sul device:
-[nella specifica cartella](https://github.com/kodiondemand/addon/wiki/Percorsi-sui-diversi-S.O.) , .kodi/addons/channels.
+[nella specifica cartella](https://github.com/stream4me/addon/wiki/Percorsi-sui-diversi-S.O.) , .kodi/addons/channels.
 Per aprirli non servono programmi particolari un semplice editor di testo è sufficiente.
 
 **Test N.1**: Controllo del file .json
@@ -53,7 +53,7 @@ valori: ita, sub-ita (sub-ita)
 Se non sono coerenti il test è FALLITO, continua comunque a revisionare il resto
 
 **2. Icone del canale**
-Controlla sia presente qualcosa, tra le " " di thumbnail e banner, e che le immagini appaiano su KoD
+Controlla sia presente qualcosa, tra le " " di thumbnail e banner, e che le immagini appaiano su S4Me
 
 **in thumbnail:**
 - [ ] Presente 
@@ -80,15 +80,15 @@ Se le voci sono: Assenti, dopo aver compilato la risposta, salva il test e **NON
 
 ***
 
-**Test su KOD.**
+**Test su S4Me.**
 
-Entra in KOD -> Canali. Nella lista accedi al canale che stai testando.
+Entra in S4Me -> Canali. Nella lista accedi al canale che stai testando.
 **N.B.**: Il nome del canale è il campo **name** nel file .json.
 
 **Test N.2: Pagina Canale**
 
 **1. Cerca o Cerca Film...**
-Cerca un titolo a caso in KOD e lo stesso titolo sul sito. Confronta i risultati.
+Cerca un titolo a caso in S4Me e lo stesso titolo sul sito. Confronta i risultati.
 
 - [ ] OK
 - indica il tipo di problema
@@ -97,7 +97,7 @@ Cerca un titolo a caso in KOD e lo stesso titolo sul sito. Confronta i risultati
 
 **TestN.3: Pagina dei Titoli**
 *Test da effettuare mentre sei dentro un menu del canale (film, serietv, in corso ecc..)*.
-Voci nel menu contestuale di KOD. Posizionati su di un titolo e controlla se hai le seguenti voci, nel menu contestuale (tasto c o tenendo enter premuto):
+Voci nel menu contestuale di S4Me. Posizionati su di un titolo e controlla se hai le seguenti voci, nel menu contestuale (tasto c o tenendo enter premuto):
 
 **1. Aggiungi Film in videoteca**
 
@@ -149,7 +149,7 @@ Per ogni titolo verifica ci siano le voci nel menu contestuale.
 - [ ] No
 
 **4. Cerca o Cerca Serie...**
-Cerca un titolo a caso in KOD e lo stesso titolo sul sito. Confronta i risultati.
+Cerca un titolo a caso in S4Me e lo stesso titolo sul sito. Confronta i risultati.
 
 - [ ] Ok
 - indica il tipo di problema
@@ -193,7 +193,7 @@ Test da effettuare mentre sei nella pagina dei titoli. Per ogni titolo verifica 
 - [ ] No
 
 **5. Cerca o Cerca Serie...**
-Cerca un titolo a caso in KOD e lo stesso titolo sul sito. Confronta i risultati.
+Cerca un titolo a caso in S4Me e lo stesso titolo sul sito. Confronta i risultati.
 
 - [ ] Ok
 - indica il tipo di problema
@@ -215,7 +215,7 @@ Cerca un titolo a caso in KOD e lo stesso titolo sul sito. Confronta i risultati
 
 **TestN.4: Pagina Sito - Menu Canale**
 
-Occorrente: Browser, KOD! e il file canale.py ( da browser o da file )
+Occorrente: Browser, S4Me! e il file canale.py ( da browser o da file )
 Avviso:
 - Sul Browser disattiva eventuali componenti aggiuntivi che bloccano i JS (javascript), li riattivi alla fine del test.
 
@@ -283,4 +283,4 @@ Per questo test ti consiglio di inserire come UNICO sito quello che stai testand
 
 Fine TEST!
 
-Grazie mille da parte di tutto il team KoD!
+Grazie mille da parte di tutto il team S4Me!

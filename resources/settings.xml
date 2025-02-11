@@ -22,8 +22,8 @@
         <setting id="player_mode" type="select" lvalues="30026|30027|30028|30029" label="30044" default="1"/>
         <setting id="default_action" type="select" lvalues="30006|30007|30008" label="30005" default="0"/>
         <setting id="autoplay" type="bool" label="70562" default="false" visible="true"/>
-        <setting id="servers_favorites" visible="true" type="action" label="60551" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19mYXZvcml0ZXMiLA0KICAgICJjaGFubmVsIjogInNldHRpbmciDQp9==)"/>
-        <setting id="servers_blacklist" visible="true" type="action" label="60550" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19ibGFja2xpc3QiLA0KICAgICJjaGFubmVsIjogInNldHRpbmciDQp9==)"/>
+        <setting id="servers_favorites" visible="true" type="action" label="60551" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19mYXZvcml0ZXMiLA0KICAgICJjaGFubmVsIjogInNldHRpbmciDQp9==)"/>
+        <setting id="servers_blacklist" visible="true" type="action" label="60550" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19ibGFja2xpc3QiLA0KICAgICJjaGFubmVsIjogInNldHRpbmciDQp9==)"/>
         <setting id="window_type" type="select" lvalues="60622|60623" label="60621" default="0"/>
         <setting id="resume_menu" type="select" lvalues="30048|30049" label="30047" default="0"/>
         <!-- <setting id="hide_servers" type="bool" label="70747" default="false" visible="eq(-1,true)" subsetting="true"/> -->
@@ -34,8 +34,8 @@
     <!-- Videolibrary -->
     <category label="30131">
         <setting label="30501" type="lsep"/>
-        <!-- <setting id="videolibrarypath" type="action" label="30067" action="RunPlugin(plugin://plugin.video.kod/?ew0KCSJjaGFubmVsIjoibW92ZV92aWRlb2xpYnJhcnkiLA0KCSJhY3Rpb24iOiJzZXRfdmlkZW9saWJyYXJ5X3BhdGgiDQp9)" default="special://profile/addon_data/plugin.video.kod/videolibrary"/> -->
-        <setting id="videolibrarypath" type="folder" label="30067" default="special://profile/addon_data/plugin.video.kod/videolibrary/" option="writeable"/>
+        <!-- <setting id="videolibrarypath" type="action" label="30067" action="RunPlugin(plugin://plugin.video.s4me/?ew0KCSJjaGFubmVsIjoibW92ZV92aWRlb2xpYnJhcnkiLA0KCSJhY3Rpb24iOiJzZXRfdmlkZW9saWJyYXJ5X3BhdGgiDQp9)" default="special://profile/addon_data/plugin.video.s4me/videolibrary"/> -->
+        <setting id="videolibrarypath" type="folder" label="30067" default="" option="writeable"/>
         <setting id="folder_tvshows" type="text" label="70118" default="Serie TV"/>
         <setting id="folder_movies" type="text" label="70119" default="Film"/>
         <setting id="videolibrary_kodi" type="bool" label="70120" default="false"/>
@@ -47,20 +47,20 @@
         <setting id="watched_setting" type="slider" option="int" range="20,5,90" label="60634" default="80"/>
         <setting id="trakt_sync" type="bool" label="70109" default="false"/>
         <setting label="30030" type="lsep"/>
-        <setting id="vidolibrary_preferences" type="action" label="60542" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAiY2hhbm5lbF9jb25maWciLA0KICAgICJjaGFubmVsIjogInZpZGVvbGlicmFyeSINCn0==)"/>
-        <setting id="vidolibrary_update" type="action" label="60568" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAidXBkYXRlX3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAidmlkZW9saWJyYXJ5Ig0KfQ==)"/>
-        <setting id="vidolibrary_export" type="action" label="80000" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAiZXhwb3J0X3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAiYmFja3VwIg0KfQ==)"/>
-        <setting id="vidolibrary_import" type="action" label="80001" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAiaW1wb3J0X3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAiYmFja3VwIg0KfQ==)"/>
-        <setting id="vidolibrary_delete" type="action" label="80036" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAiZGVsZXRlX3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAidmlkZW9saWJyYXJ5Ig0KfQ==)"/>
-        <setting id="vidolibrary_restore" type="action" label="60567" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAicmVzdG9yZV90b29scyIsDQogICAgImNoYW5uZWwiOiAic2V0dGluZyINCn0=)"/>
+        <setting id="vidolibrary_preferences" type="action" label="60542" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAiY2hhbm5lbF9jb25maWciLA0KICAgICJjaGFubmVsIjogInZpZGVvbGlicmFyeSINCn0==)"/>
+        <setting id="vidolibrary_update" type="action" label="60568" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAidXBkYXRlX3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAidmlkZW9saWJyYXJ5Ig0KfQ==)"/>
+        <setting id="vidolibrary_export" type="action" label="80000" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAiZXhwb3J0X3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAiYmFja3VwIg0KfQ==)"/>
+        <setting id="vidolibrary_import" type="action" label="80001" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAiaW1wb3J0X3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAiYmFja3VwIg0KfQ==)"/>
+        <setting id="vidolibrary_delete" type="action" label="80036" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAiZGVsZXRlX3ZpZGVvbGlicmFyeSIsDQogICAgImNoYW5uZWwiOiAidmlkZW9saWJyYXJ5Ig0KfQ==)"/>
+        <setting id="vidolibrary_restore" type="action" label="60567" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAicmVzdG9yZV90b29scyIsDQogICAgImNoYW5uZWwiOiAic2V0dGluZyINCn0=)"/>
     </category>
 
     <!-- Channels -->
     <category label="30118" >
         <setting id="channel_language" type="select" values="auto|all|ita" label="30019" default="all"/>
-        <setting id="channels_onoff" type="action" label="60545" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAiY29uZl90b29scyIsDQogICAgImNoYW5uZWwiOiAic2V0dGluZyIsDQoJImV4dHJhIjogImNoYW5uZWxzX29ub2ZmIg0KfQ==)"/>
-        <setting id="channels_config" type="action" label="60537" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAiY2hhbm5lbHNfbWVudSIsDQogICAgImNoYW5uZWwiOiAic2hvcnRjdXRzIg0KfQ==)"/>
-        <setting id="channels_check" type="action" label="60549" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAiY2hlY2tfY2hhbm5lbHMiLA0KICAgICJjaGFubmVsIjogInNob3J0Y3V0cyINCn0==)"/>
+        <setting id="channels_onoff" type="action" label="60545" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAiY29uZl90b29scyIsDQogICAgImNoYW5uZWwiOiAic2V0dGluZyIsDQoJImV4dHJhIjogImNoYW5uZWxzX29ub2ZmIg0KfQ==)"/>
+        <setting id="channels_config" type="action" label="60537" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAiY2hhbm5lbHNfbWVudSIsDQogICAgImNoYW5uZWwiOiAic2hvcnRjdXRzIg0KfQ==)"/>
+        <setting id="channels_check" type="action" label="60549" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAiY2hlY2tfY2hhbm5lbHMiLA0KICAgICJjaGFubmVsIjogInNob3J0Y3V0cyINCn0==)"/>
     </category>
 
     <!-- Servers -->
@@ -73,12 +73,12 @@
         <setting id="favorites_servers" type="bool" label="60551" default="false" visible="false"/>
         <setting id="quality_priority" type="bool" label="30069" default="false" visible="false"/>
 
-        <setting id="servers_config" type="action" label="60538" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19tZW51IiwNCiAgICAiY2hhbm5lbCI6ICJzaG9ydGN1dHMiDQp9==)"/>
-        <setting id="debriders_config" type="action" label="60552" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19tZW51IiwNCiAgICAiY2hhbm5lbCI6ICJzaG9ydGN1dHMiLA0KCSJ0eXBlIjogImRlYnJpZGVycyINCn0==)"/>
+        <setting id="servers_config" type="action" label="60538" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19tZW51IiwNCiAgICAiY2hhbm5lbCI6ICJzaG9ydGN1dHMiDQp9==)"/>
+        <setting id="debriders_config" type="action" label="60552" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAic2VydmVyc19tZW51IiwNCiAgICAiY2hhbm5lbCI6ICJzaG9ydGN1dHMiLA0KCSJ0eXBlIjogImRlYnJpZGVycyINCn0==)"/>
         <setting label="70578" type="lsep"/>
-        <!-- <setting id="torrent_config" type="action" label="70253" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX3RvcnJlbnQiLA0KICAgICJjaGFubmVsIjoic2V0dGluZyINCn0=)"/> -->
+        <!-- <setting id="torrent_config" type="action" label="70253" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX3RvcnJlbnQiLA0KICAgICJjaGFubmVsIjoic2V0dGluZyINCn0=)"/> -->
         <setting id="elementum_on_seed" type="bool" label="70805" default="false"/>
-        <setting id="elementum_install" type="action" label="70785" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJkb3dubG9hZCIsDQogICAgImNoYW5uZWwiOiJlbGVtZW50dW1fZG93bmxvYWQiDQp9)"/>
+        <setting id="elementum_install" type="action" label="70785" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJkb3dubG9hZCIsDQogICAgImNoYW5uZWwiOiJlbGVtZW50dW1fZG93bmxvYWQiDQp9)"/>
     </category>
 
     <!-- Search -->
@@ -89,7 +89,7 @@
         <setting id="saved_searches_limit" type="slider" option="int" range="10,10,40" label="60677" default="10" visible="eq(-1,0)" subsetting="true"/>
         <setting id="result_mode" type="select" label="60657" lvalues="60675|60676" default="0"/>
         <setting id="thread_number" type="slider" label="60673" option="int" range="0,1,64" default="0"/>
-        <setting id="search_channels" type="action" label="59994" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWxfbmV3IiwNCiAgICAiY2hhbm5lbCI6InNlYXJjaCINCn0=)"/>
+        <setting id="search_channels" type="action" label="59994" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWxfbmV3IiwNCiAgICAiY2hhbm5lbCI6InNlYXJjaCINCn0=)"/>
         <setting label="70154" type="lsep"/>
         <setting id="tmdb_active" default="true" visible="false"/>
 <!--        <setting id="tmdb_threads" type="slider" option="int" range="5,5,30" label="70155" default="20"/>-->
@@ -97,33 +97,33 @@
         <setting id="episode_info" type="bool" label="60292" default="false"/>
         <setting id="tmdb_cache" type="bool" label="70157" default="true"/>
         <setting id="tmdb_cache_expire" type="select" lvalues="70158|70159|70160|70161|70170" label="70162" enable="eq(-1,true)" default="4"/>
-        <setting id="tmdb_clean_db_cache" type="action" label="70163" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAic2NyaXB0Ig0KfQ==)" />
-        <setting label="Lista activa" type="text" id="lista_activa" default="kodfavorites-default.json" visible="false"/>
+        <setting id="tmdb_clean_db_cache" type="action" label="70163" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAic2NyaXB0Ig0KfQ==)" />
+        <setting label="Lista activa" type="text" id="lista_activa" default="addonfavorites-default.json" visible="false"/>
     </category>
 
     <!-- Downloads -->
     <category label="30153">
         <setting id="downloadenabled" type="bool" label="70689" default="false"/>
-        <setting id="downloadpath" type="folder" label="30017" visible="eq(-1,true)" default="special://profile/addon_data/plugin.video.kod/downloads/" option="writeable"/>
+        <setting id="downloadpath" type="folder" label="30017" visible="eq(-1,true)" default="" option="writeable"/>
         <!-- <setting id="library_add" type="bool" label="70230" default="false"/>
         <setting id="library_move" type="bool" label="70231" default="false" visible="eq(-1,true)" subsetting="true"/> -->
-        <setting id="downloadlistpath" type="folder" label="30018" visible="eq(-2,true)" default="special://profile/addon_data/plugin.video.kod/downloads/list/" option="writeable"/>
+        <setting id="downloadlistpath" type="folder" label="30018" visible="eq(-2,true)" default="" option="writeable"/>
         <setting id="library_move" type="bool" label="70231" visible="eq(-3,true)" default="true"/>
         <setting id="browser" type="bool" label="70232" visible="eq(-4,true)" default="true"/>
         <setting id="server_speed" type="bool" label="70242" visible="eq(-5,true)" default="true"/>
         <setting id="language" type="select" label="70246" values="ITA|Sub-ITA" visible="eq(-6,true)" default="ITA"/>
         <setting id="quality" type="select" label="70240" lvalues="70241|70763|70764|70765" visible="eq(-7,true)" default="0"/>
-        <setting id="download_adv" type="action" label="30030" visible="eq(-7,true)" action="RunPlugin(plugin://plugin.video.kod/?ew0KCSJhY3Rpb24iOiJjaGFubmVsX2NvbmZpZyIsDQoJImNvbmZpZyI6ImRvd25sb2FkcyIsDQogICAgImNoYW5uZWwiOiJzZXR0aW5nIg0KfQ==)"/>
+        <setting id="download_adv" type="action" label="30030" visible="eq(-7,true)" action="RunPlugin(plugin://plugin.video.s4me/?ew0KCSJhY3Rpb24iOiJjaGFubmVsX2NvbmZpZyIsDQoJImNvbmZpZyI6ImRvd25sb2FkcyIsDQogICAgImNoYW5uZWwiOiJzZXR0aW5nIg0KfQ==)"/>
     </category>
 
     <!-- News -->
     <category label="60327">
         <setting label="60525" type="lsep"/>
-        <setting id="news_films" type="action" label="60509" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoicGVsaWN1bGFzIg0KfQ==)"/>
-        <setting id="news_series" type="action" label="60511" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoic2VyaWVzIg0KfQ==)"/>
-        <setting id="news_anime" type="action" label="60512" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoiYW5pbWUiDQp9)"/>
-        <setting id="news_documentaries" type="action" label="60513" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoiZG9jdW1lbnRhbGVzIg0KfQ==)"/>
-        <setting id="news_options" type="action" label="60415" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5ncyIsDQogICAgImNoYW5uZWwiOiJuZXdzIg0KfQ==)"/>
+        <setting id="news_films" type="action" label="60509" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoicGVsaWN1bGFzIg0KfQ==)"/>
+        <setting id="news_series" type="action" label="60511" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoic2VyaWVzIg0KfQ==)"/>
+        <setting id="news_anime" type="action" label="60512" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoiYW5pbWUiDQp9)"/>
+        <setting id="news_documentaries" type="action" label="60513" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5nX2NoYW5uZWwiLA0KICAgICJjaGFubmVsIjoibmV3cyIsDQoJImV4dHJhIjoiZG9jdW1lbnRhbGVzIg0KfQ==)"/>
+        <setting id="news_options" type="action" label="60415" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiJzZXR0aW5ncyIsDQogICAgImNoYW5uZWwiOiJuZXdzIg0KfQ==)"/>
     </category>
 
     <!-- Customization -->
@@ -156,14 +156,14 @@
         <setting label="30024" type="lsep"/>
         <setting id="quick_menu" type="bool" label="60360" default="true"/>
         <!-- <setting id="side_menu" type="bool" label="70737" default="false"/> -->
-<!--        <setting id="kod_menu" type="bool" label="60026" default="true"/>-->
+<!--        <setting id="s4me_menu" type="bool" label="60026" default="true"/>-->
         <setting id="infoplus" type="bool" label="70151" default="false"/>
         <!-- <setting id="infoplus_set" type="bool" label="70128" visible="eq(-1,true)" default="false" subsetting="true"/> -->
         <!-- <setting id="extended_info" type="bool" label="70152" default="false"/> -->
         <!-- Shortcut -->
 		<setting label="30998" type="lsep"/>
-		<setting id="shortcut_key" type="action" label="30999" action="RunPlugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAia2V5bWFwIg0KfQ==)"/>
-        <setting id="delete_key" type="action" label="31000" action="RunPlugin(plugin://plugin.video.kod/?ewogICAgImFjdGlvbiI6ICJkZWxldGVfa2V5Igp9==)"/>
+		<setting id="shortcut_key" type="action" label="30999" action="RunPlugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAia2V5bWFwIg0KfQ==)"/>
+        <setting id="delete_key" type="action" label="31000" action="RunPlugin(plugin://plugin.video.s4me/?ewogICAgImFjdGlvbiI6ICJkZWxldGVfa2V5Igp9==)"/>
 		<!-- Others -->
         <setting label="70149" type="lsep"/>
         <setting id="icon_set" type="select" label="70108" values="default|light|dark|mike" default="default"/>

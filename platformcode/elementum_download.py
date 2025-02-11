@@ -11,7 +11,7 @@ setting_path = xbmc.translatePath('special://profile/addon_data/')
 elementum_path = filetools.join(addon_path,'plugin.video.elementum')
 elementum_setting = filetools.join(setting_path,'plugin.video.elementum')
 elementum_setting_file = filetools.join(elementum_setting,'settings.xml')
-kod_setting_file = filetools.join(addon_path,'plugin.video.kod', 'resources', 'settings', 'elementum', 'settings.xml')
+s4me_setting_file = filetools.join(addon_path,'plugin.video.s4me', 'resources', 'settings', 'elementum', 'settings.xml')
 
 
 def download(item=None):
@@ -94,7 +94,7 @@ def setting():
     else:
         if not filetools.exists(elementum_path):
             filetools.mkdir(elementum_path)
-        filetools.copy(kod_setting_file, elementum_setting_file)
+        filetools.copy(s4me_setting_file, elementum_setting_file)
         xbmc.sleep(1000)
         xbmc.executeJSONRPC('{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "plugin.video.elementum", "enabled": true }}')
 

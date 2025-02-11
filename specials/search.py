@@ -49,8 +49,8 @@ def mainlist(item):
     itemlist += [Item(channel=item.channel, title=config.get_localized_string(59995), action='saved_search', thumbnail=get_thumb('search.png')),
                 Item(channel=item.channel, title=config.get_localized_string(60420), action='sub_menu', thumbnail=get_thumb('search.png')),
                 Item(channel="tvmoviedb", title=config.get_localized_string(70274), action="mainlist", thumbnail=get_thumb("search.png")),
-                Item(channel=item.channel, title=typo(config.get_localized_string(59994), 'color kod bold'), action='setting_channel_new', thumbnail=get_thumb('setting_0.png'),folder=False),
-                Item(channel='shortcuts', title=typo(config.get_localized_string(70286), 'color kod bold'), action='SettingOnPosition', category=5, setting=1, thumbnail=get_thumb('setting_0.png'),folder=False)]
+                Item(channel=item.channel, title=typo(config.get_localized_string(59994), 'color std bold'), action='setting_channel_new', thumbnail=get_thumb('setting_0.png'),folder=False),
+                Item(channel='shortcuts', title=typo(config.get_localized_string(70286), 'color std bold'), action='SettingOnPosition', category=5, setting=1, thumbnail=get_thumb('setting_0.png'),folder=False)]
 
     itemlist = set_context(itemlist)
     return itemlist
@@ -83,7 +83,7 @@ def saved_search(item):
         itemlist.append(
             Item(channel=item.channel,
                  action="clear_saved_searches",
-                 title=typo(config.get_localized_string(60417), 'color kod bold'),
+                 title=typo(config.get_localized_string(60417), 'color std bold'),
                  thumbnail=get_thumb('search.png')))
 
     itemlist = set_context(itemlist)
@@ -269,7 +269,7 @@ def channel_search(item):
             if mode == 'all' or (it.contentType and mode == it.contentType):
                 if config.get_setting('result_mode') != 0:
                     if config.get_localized_string(30992) not in it.title:
-                        it.title += typo(ch_name,'_ [] color kod bold')
+                        it.title += typo(ch_name,'_ [] color std bold')
                         results.append(it)
                 else:
                     grouped.append(it)
@@ -283,7 +283,7 @@ def channel_search(item):
         # to_temp[key] = grouped
         if config.get_setting('result_mode') == 0:
             if not config.get_setting('unify'):
-                title = typo(ch_name,'bold') + typo(str(len(grouped)), '_ [] color kod bold')
+                title = typo(ch_name,'bold') + typo(str(len(grouped)), '_ [] color std bold')
             else:
                 title = typo('%s %s' % (len(grouped), config.get_localized_string(70695)), 'bold')
             # res_count += len(grouped)
@@ -319,13 +319,13 @@ def channel_search(item):
     results = sorted(results, key=lambda it: it.title)
     results_statistic = config.get_localized_string(59972) % (item.title, time.time() - start)
     if mode == 'all':
-        results.insert(0, Item(title=typo(results_statistic, 'color kod bold'), thumbnail=get_thumb('search.png')))
+        results.insert(0, Item(title=typo(results_statistic, 'color std bold'), thumbnail=get_thumb('search.png')))
     else:
         if not valid:
             valid.append(Item(title=config.get_localized_string(60347), thumbnail=get_thumb('nofolder.png')))
 
-        valid.insert(0, Item(title=typo(results_statistic, 'color kod bold'), thumbnail=get_thumb('search.png')))
-        results.insert(0, Item(title=typo(config.get_localized_string(30025), 'color kod bold'), thumbnail=get_thumb('search.png')))
+        valid.insert(0, Item(title=typo(results_statistic, 'color std bold'), thumbnail=get_thumb('search.png')))
+        results.insert(0, Item(title=typo(config.get_localized_string(30025), 'color std bold'), thumbnail=get_thumb('search.png')))
     # logger.debug(results_statistic)
 
     itlist = valid + results
@@ -383,7 +383,7 @@ def get_servers(item, module_dict):
     except:
         import traceback
         logger.error(traceback.format_exc())
-    return [r.clone(title=r.title + typo(item.channel, '_ [] color kod')) for r in results if r.action == 'play']
+    return [r.clone(title=r.title + typo(item.channel, '_ [] color std')) for r in results if r.action == 'play']
 
 
 def get_info(itemlist):
@@ -585,7 +585,7 @@ def years_menu(item):
         itemlist.append(Item(channel=item.channel, title=typo(str(year), 'bold'), action='discover_list',
                              discovery=discovery, mode=item.mode, year_=str(year), thumbnail=thumb))
     itemlist.reverse()
-    itemlist.append(Item(channel=item.channel, title=typo(config.get_localized_string(70745),'color kod bold'), url='',
+    itemlist.append(Item(channel=item.channel, title=typo(config.get_localized_string(70745),'color std bold'), url='',
                          action="year_cus", mode=item.mode, par_year=par_year))
 
     return itemlist
@@ -639,7 +639,7 @@ def actor_list(item):
                 plot = '%s in %s' % (rol, t_k)
 
         thumbnail = 'https://image.tmdb.org/t/p/original%s' % elem.get('profile_path', '')
-        title = typo(name,'bold')+typo(rol,'_ [] color kod bold')
+        title = typo(name,'bold')+typo(rol,'_ [] color std bold')
 
         discovery = {'url': 'person/%s/combined_credits' % cast_id, 'page': '1',
                      'sort_by': 'primary_release_date.desc', 'language': def_lang}
@@ -649,7 +649,7 @@ def actor_list(item):
 
     if len(results) > 19:
         next_ = item.page + 1
-        itemlist.append(Item(channel=item.channel, title=typo(config.get_localized_string(30992),'bold color kod'), action='actor_list',
+        itemlist.append(Item(channel=item.channel, title=typo(config.get_localized_string(30992),'bold color std'), action='actor_list',
                              page=next_, thumbnail=thumbnail,
                              searched_text=item.searched_text))
     return itemlist
@@ -711,13 +711,13 @@ def discover_list(item):
     elif len(result) > 19 and item.discovery:
         item.discovery['page'] = str(int(item.discovery['page']) + 1)
         itemlist.append(item.clone(channel=item.channel, action='discover_list', nextPage=True,
-                             title=typo(config.get_localized_string(30992), 'color kod bold'),
+                             title=typo(config.get_localized_string(30992), 'color std bold'),
                              list_type=item.list_type, discovery=item.discovery, thumbnail=thumb(), page=item.discovery['page']))
     elif len(result) > 19:
         next_page = str(int(item.page) + 1)
 
         itemlist.append(item.clone(channel=item.channel, action='discover_list', nextPage=True,
-                             title=typo(config.get_localized_string(30992), 'color kod bold'),
+                             title=typo(config.get_localized_string(30992), 'color std bold'),
                              list_type=item.list_type, search_type=item.search_type, mode=item.mode, page=next_page, thumbnail=thumb()))
 
     return itemlist
@@ -779,7 +779,7 @@ def get_from_temp(item):
     results = [Item().fromurl(elem) for elem in item.itemlist[prevp:nextp]]
 
     if nextp < nTotal:
-        results.append(Item(channel='search', title=typo(config.get_localized_string(30992), 'bold color kod'),
+        results.append(Item(channel='search', title=typo(config.get_localized_string(30992), 'bold color std'),
                             action='get_from_temp', itemlist=item.itemlist, page=item.page + 1, nextPage=True))
 
     tmdb.set_infoLabels_itemlist(results, True)

@@ -87,7 +87,7 @@ def peliculas(item):
 
     def itemHook(item):
         if 'sub-ita' in item.url:
-            if item.args != 'newest': item.title = item.title + support.typo('Sub-ITA','_ [] color kod')
+            if item.args != 'newest': item.title = item.title + support.typo('Sub-ITA','_ [] color std')
             item.contentLanguage = 'Sub-ITA'
         return item
 

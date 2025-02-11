@@ -350,7 +350,7 @@ def mark_season_as_watched_on_kodi(item, value=1):
 
     execute_sql_kodi(sql)
 
-def set_watched_on_kod(data):
+def set_watched_on_addon(data):
     from specials import videolibrary
     from core import videolibrarytools
     data = jsontools.load(data)
@@ -387,7 +387,7 @@ def set_watched_on_kod(data):
                                 item = videolibrary.check_season_playcount(item, season_num)
                                 filetools.write(path, head_nfo + item.tojson())
 
-def mark_content_as_watched_on_kod(path):
+def mark_content_as_watched_on_addon(path):
     from specials import videolibrary
     from core import videolibrarytools
 
@@ -573,7 +573,7 @@ def update(folder_content=config.get_setting("folder_tvshows"), folder=""):
 
 
 def search_library_path():
-    sql = 'SELECT strPath FROM path WHERE strPath LIKE "special://%/plugin.video.kod/library/" AND idParentPath ISNULL'
+    sql = 'SELECT strPath FROM path WHERE strPath LIKE "special://%/plugin.video.s4me/library/" AND idParentPath ISNULL'
     nun_records, records = execute_sql_kodi(sql)
     if nun_records >= 1:
         logger.debug(records[0][0])
@@ -1095,7 +1095,6 @@ def check_sources(new_movies_path='', new_tvshows_path=''):
 
 
 def update_sources(new='', old=''):
-    logger.debug()
     if new == old: return
 
     SOURCES_PATH = xbmc.translatePath("special://userdata/sources.xml")
@@ -1152,7 +1151,7 @@ def update_sources(new='', old=''):
         name = new
         if new.endswith(sep):
             name = new[:-1]
-        name_node.appendChild(xmldoc.createTextNode(name.rsplit(sep)[-1]))
+        name_node.appendChild(xmldoc.createTextNode(name.rsplit(sep)[-1]+ '-' + config.PLUGIN_NAME))
         source_node.appendChild(name_node)
 
         # <path> Node
@@ -1179,7 +1178,6 @@ def update_sources(new='', old=''):
 
 def ask_set_content(silent=False):
     # from core.support import dbg;dbg()
-    logger.debug()
     logger.debug("videolibrary_kodi %s" % config.get_setting("videolibrary_kodi"))
     def do_config(custom=True):
         if set_content("movie", True, custom) and set_content("tvshow", True, custom):

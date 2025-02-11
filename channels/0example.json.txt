@@ -2,7 +2,7 @@ Rev:0.2
 Update: 03-10-2019
 #####################
 
-Promemoria da cancellare pena la non visibilità del canale in KOD!!
+Promemoria da cancellare pena la non visibilità del canale in S4Me!!
 
 #####################
 
@@ -18,7 +18,7 @@ se vanno cancellati tutti deve rimanere la voce:
 ##################### Cancellare fino a qui!
 {
     "id": "nome del file .json",
-    "name": "Nome del canale visualizzato in KOD",
+    "name": "Nome del canale visualizzato in S4Me",
     "language": ["ita", "sub-ita"],
     "active": false,
     "thumbnail": "",

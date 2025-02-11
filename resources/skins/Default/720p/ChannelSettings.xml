@@ -39,7 +39,7 @@
           <textcolor>FFFFFFFF</textcolor>
           <align>left</align>
           <aligny>center</aligny>
-          <label>$ADDON[plugin.video.kod 70000]</label>
+          <label>$ADDON[plugin.video.s4me 70000]</label>
         </control>
         <!-- CLOSE BUTTON -->
         <control type="button" id="10003">
@@ -62,7 +62,7 @@
           <texturenofocus colordiffuse="FF191919">white.png</texturenofocus>
           <align>center</align>
           <aligny>center</aligny>
-          <label>$ADDON[plugin.video.kod 70001]</label>
+          <label>$ADDON[plugin.video.s4me 70001]</label>
         </control>
         <!-- CANCEL -->
         <control type="button" id="10005">
@@ -76,7 +76,7 @@
           <texturenofocus colordiffuse="FF191919">white.png</texturenofocus>
           <align>center</align>
           <aligny>center</aligny>
-          <label>$ADDON[plugin.video.kod 70002]</label>
+          <label>$ADDON[plugin.video.s4me 70002]</label>
         </control>
         <!-- DEFAULT -->
         <control type="button" id="10006">
@@ -90,7 +90,7 @@
           <texturenofocus colordiffuse="FF191919">white.png</texturenofocus>
           <align>center</align>
           <aligny>center</aligny>
-          <label>$ADDON[plugin.video.kod 70003]</label>
+          <label>$ADDON[plugin.video.s4me 70003]</label>
         </control>
         <!-- Parameters -->
         <control type="group" id="10007">
@@ -107,7 +107,7 @@
             <textcolor>FFFFFFFF</textcolor>
             <align>center</align>
             <aligny>center</aligny>
-            <label>$ADDON[plugin.video.kod 70004]</label>
+            <label>$ADDON[plugin.video.s4me 70004]</label>
           </control>
         </control>
         <!-- Scrollbar -->

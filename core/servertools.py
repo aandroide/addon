@@ -113,7 +113,7 @@ def get_servers_itemlist(itemlist, fnc=None, sort=False):
     # itemlist = filter(lambda i: not i.server or is_server_enabled(i.server), itemlist)
 
     for item in itemlist:
-        # We assign "direct" in case the server is not in KoD
+        # We assign "direct" in case the server is not in S4Me
         if not item.server and item.url:
             item.server = "directo"
 

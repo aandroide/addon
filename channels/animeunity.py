@@ -145,7 +145,7 @@ def news(item):
                            action = 'findvideos')
             )
     if 'next_page_url' in fullJs:
-        itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color kod bold'),thumbnail=support.thumb(), url=fullJs['next_page_url']))
+        itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color std bold'),thumbnail=support.thumb(), url=fullJs['next_page_url']))
     return itemlist
 
 
@@ -175,9 +175,9 @@ def peliculas(item):
         else: language = 'Sub-ITA'
 
         if title:
-            itm = item.clone(title=support.typo(title,'bold') + support.typo(language,'_ [] color kod') + (support.typo(it['title_eng'],'_ ()') if it['title_eng'] else ''))
+            itm = item.clone(title=support.typo(title,'bold') + support.typo(language,'_ [] color std') + (support.typo(it['title_eng'],'_ ()') if it['title_eng'] else ''))
         else:
-            itm = item.clone(title=support.typo(it['title_eng'],'bold') + support.typo(language,'_ [] color kod'))
+            itm = item.clone(title=support.typo(it['title_eng'],'bold') + support.typo(language,'_ [] color std'))
         itm.contentLanguage = language
         itm.type = it['type']
         itm.thumbnail = it['imageurl']
@@ -203,7 +203,7 @@ def peliculas(item):
 
     autorenumber.start(itemlist)
     if len(itemlist) >= 30:
-        itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color kod bold'), thumbnail=support.thumb(), page=page + 1))
+        itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color std bold'), thumbnail=support.thumb(), page=page + 1))
 
     return itemlist
 

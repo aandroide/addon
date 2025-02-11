@@ -14,8 +14,8 @@ from specials import videolibrary
 PY3 = False
 if sys.version_info[0] >= 3: PY3 = True; unicode = str; unichr = chr; long = int
 
-temp_path = unicode(xbmc.translatePath("special://userdata/addon_data/plugin.video.kod/temp/"))
-videolibrary_temp_path = unicode(xbmc.translatePath("special://userdata/addon_data/plugin.video.kod/temp/videolibrary"))
+temp_path = unicode(xbmc.translatePath("special://userdata/addon_data/plugin.video.s4me/temp/"))
+videolibrary_temp_path = unicode(xbmc.translatePath("special://userdata/addon_data/plugin.video.s4me/temp/videolibrary"))
 movies_path = unicode(filetools.join(videolibrary_temp_path, "movies"))
 tvshows_path = unicode(filetools.join(videolibrary_temp_path, "tvshows"))
 videolibrary_movies_path = unicode(videolibrarytools.MOVIES_PATH)
@@ -28,7 +28,7 @@ def export_videolibrary(item):
     zip_file_folder = platformtools.dialog_browse(3, config.get_localized_string(80002))
     if zip_file_folder == "":
         return
-    zip_file = unicode(xbmc.translatePath(zip_file_folder + "KoD_video_library-" + str(datetime.date.today()) + ".zip"))
+    zip_file = unicode(xbmc.translatePath(zip_file_folder + "S4Me_video_library-" + str(datetime.date.today()) + ".zip"))
 
     p_dialog = platformtools.dialog_progress_bg(config.get_localized_string(20000), config.get_localized_string(80003))
     # p_dialog.update(0)

@@ -114,7 +114,7 @@ def mainlist(item):
     # itemlist.append(new_item)
     thumbnail = get_thumb("setting_0.png")
     itemlist.append(Item(channel='shortcuts', action="SettingOnPosition", category=7, setting=1,
-                         title=typo(config.get_localized_string(70285), 'bold color kod'), thumbnail=thumbnail))
+                         title=typo(config.get_localized_string(70285), 'bold color std'), thumbnail=thumbnail))
 
     return itemlist
 
@@ -430,14 +430,14 @@ def get_title(item):
     if item.contentLanguage == '':
         pass
     elif type(item.contentLanguage) == list and len(item.contentLanguage) ==1:
-        title += support.typo(item.contentLanguage[0], '_ [] color kod')
+        title += support.typo(item.contentLanguage[0], '_ [] color std')
     elif type(item.contentLanguage) != '':
-          title += support.typo(item.contentLanguage, '_ [] color kod')
+          title += support.typo(item.contentLanguage, '_ [] color std')
     elif type(item.contentLanguage) == list:
         title += item.contentLanguage
 
     if item.quality:
-        title += support.typo(item.quality, '_ [] color kod')
+        title += support.typo(item.quality, '_ [] color std')
 
     # season_ = support.typo(config.get_localized_string(70736), '_ [] color white bold') if (type(item.args) != bool and 'season_completed' in item.news and not item.episode) else ''
     # if season_:
@@ -478,7 +478,7 @@ def group_by_channel(list_result_canal):
     # We add the content found in the list_result list
     for c in sorted(dict_canales):
         channel_params = channeltools.get_channel_parameters(c)
-        itemlist.append(Item(channel="news", title=support.typo(channel_params['title'],'bullet bold color kod'), thumbnail=channel_params['thumbnail']))
+        itemlist.append(Item(channel="news", title=support.typo(channel_params['title'],'bullet bold color std'), thumbnail=channel_params['thumbnail']))
 
         for i in dict_canales[c]:
             itemlist.append(i.clone())

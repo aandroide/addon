@@ -49,7 +49,7 @@ def show_channels(item):
     json = load_and_check(item)
 
     itemlist.append(Item(channel=item.channel,
-                         title=support.typo(config.get_localized_string(70676), 'bold color kod'),
+                         title=support.typo(config.get_localized_string(70676), 'bold color std'),
                          action='add_channel',
                          thumbnail=get_thumb('add.png')))
 
@@ -244,7 +244,7 @@ def peliculas(item, json='', key='', itemlist=[]):
     #     itemlist.sort(key=lambda x: x.title.lower(), reverse=False)
     if Pagination and len(itemlist) >= Pagination:
         if inspect.stack(0)[1][3] != 'get_newest':
-            item.title = support.typo(config.get_localized_string(30992), 'color kod bold')
+            item.title = support.typo(config.get_localized_string(30992), 'color std bold')
             item.page = pag + 1
             item.thumbnail = support.thumb()
             itemlist.append(item)
@@ -402,7 +402,7 @@ def episodios(item, json='', key='', itemlist=[]):
         elif defp and inspect.stack(0)[1][3] not in ['get_seasons'] and not item.disable_pagination:
             if Pagination and len(itemlist) >= Pagination:
                 if inspect.stack(0)[1][3] != 'get_newest':
-                    item.title = support.typo(config.get_localized_string(30992), 'color kod bold')
+                    item.title = support.typo(config.get_localized_string(30992), 'color std bold')
                     item.page = pag + 1
                     item.thumbnail = support.thumb()
                     itemlist.append(item)
@@ -620,7 +620,7 @@ def submenu(item, json, key, itemlist=[], filter_list=[]):
                 itemlist.append(res.result())
 
     if Pagination and len(itemlist) >= Pagination:
-        item.title = support.typo(config.get_localized_string(30992), 'color kod bold')
+        item.title = support.typo(config.get_localized_string(30992), 'color std bold')
         item.page = pag + 1
         item.thumb = item.thumbnail
         item.thumbnail = support.thumb()
@@ -792,15 +792,15 @@ def set_title(title, language='', quality='', info=''):
     title = support.typo(title, t)
 
     if quality:
-        title += support.typo(quality, '_ [] color kod bold')
+        title += support.typo(quality, '_ [] color std bold')
     if language:
         if not isinstance(language, list):
-            title += support.typo(language.upper(), '_ [] color kod bold')
+            title += support.typo(language.upper(), '_ [] color std bold')
         else:
             for lang in language:
-                title += support.typo(language.upper(), '_ [] color kod bold')
+                title += support.typo(language.upper(), '_ [] color std bold')
     if info:
-        title += support.typo(info.upper(), '_ [] color kod bold')
+        title += support.typo(info.upper(), '_ [] color std bold')
 
     return title
 
@@ -848,7 +848,7 @@ def pagination(item, itemlist=[]):
                 Item(channel=item.channel,
                      action='pagination',
                      contentType=item.contentType,
-                     title=support.typo(config.get_localized_string(30992), 'color kod bold'),
+                     title=support.typo(config.get_localized_string(30992), 'color std bold'),
                      fulltitle=item.fulltitle,
                      show=item.show,
                      url=item.url,

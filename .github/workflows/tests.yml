@@ -24,7 +24,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'reports'
-          destination_repo: 'kodiondemand/kodiondemand.github.io'
-          user_email: 'tests@kod.bot'
+          destination_repo: 'stream4me/stream4me.github.io'
+          user_email: 'tests@s4me.bot'
           user_name: 'bot'
           commit_message: 'Test suite'

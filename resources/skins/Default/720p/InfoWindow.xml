@@ -83,7 +83,7 @@
                         <font>font13</font>
                         <textcolor>FFFFFFFF</textcolor>
                         <shadowcolor>00000000</shadowcolor>
-                        <label>$ADDON[plugin.video.kod 60382] $INFO[ListItem.Property(genre)] | $ADDON[plugin.video.kod 60380] [B]$INFO[ListItem.Property(rating)][/B]</label>
+                        <label>$ADDON[plugin.video.s4me 60382] $INFO[ListItem.Property(genre)] | $ADDON[plugin.video.s4me 60380] [B]$INFO[ListItem.Property(rating)][/B]</label>
                         <align>left</align>
                     </control>
                     <!-- Plot -->

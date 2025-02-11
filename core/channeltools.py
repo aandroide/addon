@@ -12,7 +12,7 @@ DEFAULT_UPDATE_URL = "/channels/"
 dict_channels_parameters = dict()
 default_file = dict()
 
-remote_path = 'https://raw.githubusercontent.com/kodiondemand/media/master/'
+remote_path = 'https://raw.githubusercontent.com/Stream4me/media/master/'
 
 def is_enabled(channel_name):
     logger.debug("channel_name=" + channel_name)
@@ -241,7 +241,7 @@ def get_channel_setting(name, channel, default=None):
 
     Returns the value of the parameter 'name' in the own configuration of the channel 'channel'.
 
-    Look in the path \addon_data\plugin.video.kod\settings_channels for the file channel_data.json and read
+    Look in the path \addon_data\plugin.video.s4me\settings_channels for the file channel_data.json and read
     the value of the parameter 'name'. If the file channel_data.json does not exist look in the channels folder for the file
     channel.json and create a channel_data.json file before returning the requested value. If the parameter 'name'
     also does not exist in the channel.json file the default parameter is returned.
@@ -299,7 +299,7 @@ def set_channel_setting(name, value, channel):
     Set 'value' as the value of the parameter 'name' in the own configuration of the channel 'channel'.
     Returns the changed value or None if the assignment could not be completed.
 
-    If the name of the channel is specified, search in the path \addon_data\plugin.video.kod\settings_channels the
+    If the name of the channel is specified, search in the path \addon_data\plugin.video.s4me\settings_channels the
     channel_data.json file and set the parameter 'name' to the value indicated by 'value'.
     If the parameter 'name' does not exist, it adds it, with its value, to the corresponding file.
 

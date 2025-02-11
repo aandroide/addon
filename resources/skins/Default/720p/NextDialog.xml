@@ -39,7 +39,7 @@
                     <pulseonselect>no</pulseonselect>
                 </control>
                 <control type="button" id="3013">
-                    <label>$ADDON[plugin.video.kod  60396]</label>
+                    <label>$ADDON[plugin.video.s4me  60396]</label>
                     <height>40</height>
                     <width min="50">auto</width>
                     <font>font30_title</font>

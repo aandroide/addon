@@ -142,10 +142,10 @@ def peliculas(item):
         if not item.contentLanguage:
             if 'dub=1' in item.url or item.l == 'dub':
                 item.contentLanguage = 'ITA'
-                item.title += support.typo(item.contentLanguage,'_ [] color kod')
+                item.title += support.typo(item.contentLanguage,'_ [] color std')
             else:
                 item.contentLanguage = 'Sub-ITA'
-                item.title += support.typo(item.contentLanguage,'_ [] color kod')
+                item.title += support.typo(item.contentLanguage,'_ [] color std')
         return item
     return locals()
 

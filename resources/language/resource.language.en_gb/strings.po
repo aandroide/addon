@@ -16,7 +16,7 @@ msgstr ""
 "Language: en_EN\n"
 
 msgctxt "#20000"
-msgid "Kodi on Demand"
+msgid "Stream4Me"
 msgstr ""
 
 msgctxt "#20001"
@@ -709,11 +709,11 @@ msgid "No video to play"
 msgstr ""
 
 msgctxt "#60013"
-msgid "This website [B]%s[/B] seems to be unavailable, try later. if the web page is working correctly, please report the error on: https://github.com/kodiondemand/addon/issues"
+msgid "This website [B]%s[/B] seems to be unavailable, try later. if the web page is working correctly, please report the error on: https://github.com/stream4me/addon/issues"
 msgstr ""
 
 msgctxt "#60014"
-msgid "It may be due to a connection problem, the web page of the channel has changed its structure, or an internal error of KoD. If on browser it works, report the issue using [B]Help->Report an issue.[/B]"
+msgid "It may be due to a connection problem, the web page of the channel has changed its structure, or an internal error of S4Me. If on browser it works, report the issue using [B]Help->Report an issue.[/B]"
 msgstr ""
 
 msgctxt "#60015"
@@ -761,7 +761,7 @@ msgid "Delete TV show"
 msgstr ""
 
 msgctxt "#60026"
-msgid "KoD settings"
+msgid "S4Me settings"
 msgstr ""
 
 msgctxt "#60027"
@@ -809,7 +809,7 @@ msgid "TV show update..."
 msgstr ""
 
 msgctxt "#60038"
-msgid "An error has occurred in KoD"
+msgid "An error has occurred in S4Me"
 msgstr ""
 
 msgctxt "60039"
@@ -1269,7 +1269,7 @@ msgid "Problem in the connection process"
 msgstr ""
 
 msgctxt "#60261"
-msgid "Kodi on Demand"
+msgid ""
 msgstr ""
 
 msgctxt "#60262"
@@ -1653,7 +1653,7 @@ msgid "The server on which it is hosted"
 msgstr ""
 
 msgctxt "#60364"
-msgid "is not yet supported in KoD"
+msgid "is not yet supported in S4Me"
 msgstr ""
 
 msgctxt "#60365"
@@ -1989,7 +1989,7 @@ msgid "    - Links of interest"
 msgstr ""
 
 msgctxt "#60457"
-msgid "Kodi On Demand"
+msgid "Stream4Me"
 msgstr ""
 
 msgctxt "#60458"
@@ -2005,11 +2005,11 @@ msgid "This can be improved by limiting the maximum number of links or by displa
 msgstr ""
 
 msgctxt "#60461"
-msgid "KoD - FAQ - %s"
+msgid "S4Me - FAQ - %s"
 msgstr ""
 
 msgctxt "#60462"
-msgid "You may not have written the library path correctly in 'Settings>Preferences'.\nIl The specified path must be exactly the same as the 'source' entered in 'Archive' of the Kodi library.\nAVANZATO: This path is also found in 'sources.xml'.\nThere can be problems using some Kodi forks and paths with 'special://'. SPMC, for example, has problems with this, and there doesn't seem to be a solution, as it is an external problem to Kodi on Demand that has existed for a long time.\nYou can try solving these problems in 'Settings>Library Settings' by changing the 'Search in' setting from 'The folder of each TV show' to 'All library'."
+msgid "You may not have written the library path correctly in 'Settings>Preferences'.\nIl The specified path must be exactly the same as the 'source' entered in 'Archive' of the Kodi library.\nAVANZATO: This path is also found in 'sources.xml'.\nThere can be problems using some Kodi forks and paths with 'special://'. SPMC, for example, has problems with this, and there doesn't seem to be a solution, as it is an external problem to Stream4Me that has existed for a long time.\nYou can try solving these problems in 'Settings>Library Settings' by changing the 'Search in' setting from 'The folder of each TV show' to 'All library'."
 msgstr ""
 
 msgctxt "#60463"
@@ -2017,7 +2017,7 @@ msgid "The channel site may not work. In case the site works you can report the 
 msgstr ""
 
 msgctxt "#60464"
-msgid "It is possible that you have updated KoD recently and that the changes have not been fully applied Well, you can try 'Settings>Other Tools', checking the *_data.json files or reattaching everything to the library again"
+msgid "It is possible that you have updated S4Me recently and that the changes have not been fully applied Well, you can try 'Settings>Other Tools', checking the *_data.json files or reattaching everything to the library again"
 msgstr ""
 
 msgctxt "#60465"
@@ -2029,11 +2029,11 @@ msgid "Yes, the option to display merged or split results by channels can be fou
 msgstr ""
 
 msgctxt "#60467"
-msgid "To report a problem on'https://t.me/kodiondemand' you need to:|the version you're using of Alpha.|The version you're using of Kodi, mediaserver, etc.|the version and name of the operating system you're using.|The name of the skin (in case you're using Kodi) and whether using the default skin has solved the problem.|Description of the problem and any test cases.To activate the log in detailed mode, go to:|Configuration.|Preferences.|In the General tab - Check the option: Generate detailed log. The detailed log file can be found in the following path: \n\n%s"
+msgid ""
 msgstr ""
 
 msgctxt "#60468"
-msgid "You can find our Telegram group at @kodiondemand"
+msgid ""
 msgstr ""
 
 msgctxt "#60469"
@@ -2473,7 +2473,7 @@ msgid "Restoring TV shows video library"
 msgstr ""
 
 msgctxt "#60585"
-msgid "Kodi on Demand"
+msgid ""
 msgstr ""
 
 msgctxt "#60586"
@@ -3125,7 +3125,7 @@ msgid "In my Collection"
 msgstr ""
 
 msgctxt "#70069"
-msgid "Search %s in KoD: %s"
+msgid "Search %s in S4Me: %s"
 msgstr ""
 
 msgctxt "#70070"
@@ -3261,7 +3261,7 @@ msgid "The Kodi video library has been successfully configured"
 msgstr ""
 
 msgctxt "#70105"
-msgid "Do you want KoD to configure the Kodi library? You will be asked to set up scrapers for movies and TV shows."
+msgid "Do you want S4Me to configure the Kodi library? You will be asked to set up scrapers for movies and TV shows."
 msgstr ""
 
 msgctxt "#70106"
@@ -3321,7 +3321,7 @@ msgid "Movies folder"
 msgstr ""
 
 msgctxt "#70120"
-msgid "Add KoD contents to Kodi video library"
+msgid "Add S4Me contents to Kodi video library"
 msgstr ""
 
 msgctxt "#70121"
@@ -3613,11 +3613,11 @@ msgid "Open torrent with..."
 msgstr ""
 
 msgctxt "#70194"
-msgid "KoD-torrent"
+msgid "S4Me-torrent"
 msgstr ""
 
 msgctxt "#70195"
-msgid "KoD - Torrent"
+msgid "S4Me - Torrent"
 msgstr ""
 
 msgctxt "#70196"
@@ -3865,7 +3865,7 @@ msgid "Settings -- Torrent"
 msgstr ""
 
 msgctxt "#70258"
-msgid "KoD started"
+msgid "S4Me started"
 msgstr ""
 
 msgctxt "#70259"
@@ -3885,11 +3885,11 @@ msgid "Stopping the Websocket server ..."
 msgstr ""
 
 msgctxt "#70263"
-msgid "KoD stopped"
+msgid "S4Me stopped"
 msgstr ""
 
 msgctxt "#70264"
-msgid "Enter the username and password to access KoD"
+msgid "Enter the username and password to access S4Me"
 msgstr ""
 
 msgctxt "#70265"
@@ -4221,7 +4221,7 @@ msgid "List sorted by %s. Change order?"
 msgstr ""
 
 msgctxt "#70350"
-msgid "Search in KoD: %s"
+msgid "Search in S4Me: %s"
 msgstr ""
 
 msgctxt "#70351"
@@ -4969,11 +4969,11 @@ msgid "Move down all"
 msgstr ""
 
 msgctxt "#70539"
-msgid "* Create different folders to store your favorite links within Kodi on Demand. [CR]"
+msgid "* Create different folders to store your favorite links within Stream4Me. [CR]"
 msgstr ""
 
 msgctxt "#70540"
-msgid "* To add links to folders, access the context menu from any point in Kodi on Demand.[CR]"
+msgid "* To add links to folders, access the context menu from any point in Stream4Me.[CR]"
 msgstr ""
 
 msgctxt "#70541"
@@ -5145,7 +5145,7 @@ msgid "Updates notification"
 msgstr ""
 
 msgctxt "#70583"
-msgid "Management of updates of other addons related to KoD:"
+msgid "Management of updates of other addons related to S4Me:"
 msgstr ""
 
 msgctxt "#70584"
@@ -5492,7 +5492,7 @@ msgid "Use the context menu to define one"
 msgstr ""
 
 msgctxt "#70667"
-msgid "KoD is already updated"
+msgid "S4Me is already updated"
 msgstr ""
 
 msgctxt "#70668"
@@ -5516,11 +5516,11 @@ msgid "Addon successfully updated to %s.fix %d"
 msgstr ""
 
 msgctxt "#70673"
-msgid "KoD updated to"
+msgid "S4Me updated to"
 msgstr ""
 
 msgctxt "#70674"
-msgid "KoD updates"
+msgid "S4Me updates"
 msgstr ""
 
 msgctxt "#70675"
@@ -5544,7 +5544,7 @@ msgid "From URL"
 msgstr ""
 
 msgctxt "#70680"
-msgid "KoD - (Community)"
+msgid "S4Me - (Community)"
 msgstr ""
 
 msgctxt "#70681"
@@ -5592,7 +5592,7 @@ msgid "Using the download function you declare that you have a physical copy and
 msgstr ""
 
 msgctxt "#70692"
-msgid "The KoD team assumes no responsibility for the use that is made of this proposed function"
+msgid "The S4Me team assumes no responsibility for the use that is made of this proposed function"
 msgstr ""
 
 msgctxt "#70693"
@@ -5644,7 +5644,7 @@ msgid "Use your custom channel URLs"
 msgstr ""
 
 msgctxt "#70706"
-msgid "Launch KoD at Kodi start"
+msgid "Launch S4Me at Kodi start"
 msgstr ""
 
 msgctxt "#70707"
@@ -5696,11 +5696,11 @@ msgid "I can't automatically find the special episode number, please enter it ma
 msgstr ""
 
 msgctxt "#70720"
-msgid "Dear User\n,You are currently not connected to any modem/router. We advise you to check at least that the modem/router is switched on and/or your device is connected.\nKoD WONT FIND ANYTHING until the problem is resolved".
+msgid "Dear User\n,You are currently not connected to any modem/router. We advise you to check at least that the modem/router is switched on and/or your device is connected.\nS4Me WONT FIND ANYTHING until the problem is resolved".
 msgstr ""
 
 msgctxt "#70721"
-msgid "Dear user, you seem to have problems with ADSL! We suggest you call your manager's toll-free number or check it out at least that the modem/router is on and/or your device is connected.\nKoD WONT FIND ANYTHING until the problem is resolved"
+msgid "Dear user, you seem to have problems with ADSL! We suggest you call your manager's toll-free number or check it out at least that the modem/router is on and/or your device is connected.\nS4Me WONT FIND ANYTHING until the problem is resolved"
 msgstr ""
 
 msgctxt "#70722"
@@ -6084,7 +6084,7 @@ msgid "Extracting Widevine CDM from image..."
 msgstr ""
 
 msgctxt "#70817"
-msgid "Series "%s" is not managed by KoD, Do you want to search for it?"
+msgid "Series "%s" is not managed by S4Me, Do you want to search for it?"
 msgstr ""
 
 msgctxt "#70818"
@@ -6385,7 +6385,7 @@ msgid "Folder name for TV shows"
 msgstr ""
 
 msgctxt "#80022"
-msgid "You can configure the Kodi video library later from KoD settings"
+msgid "You can configure the Kodi video library later from S4Me settings"
 msgstr ""
 
 msgctxt "#80023"
@@ -6393,7 +6393,7 @@ msgid "You will be asked to choose and configure the information providers for m
 msgstr ""
 
 msgctxt "#80024"
-msgid "An error has occurred during the configuration of the Kodi video library. Please check the log and try again from KoD settings"
+msgid "An error has occurred during the configuration of the Kodi video library. Please check the log and try again from S4Me settings"
 msgstr ""
 
 msgctxt "#80025"
@@ -6413,7 +6413,7 @@ msgid "The selected folders are already used by the Kodi library. Please change 
 msgstr ""
 
 msgctxt "#80029"
-msgid "The selected folders are already used by the Kodi library. Please change them properly from KoD settings"
+msgid "The selected folders are already used by the Kodi library. Please change them properly from S4Me settings"
 msgstr ""
 
 msgctxt "#80030"
@@ -6429,7 +6429,7 @@ msgid "Installing..."
 msgstr ""
 
 msgctxt "#80033"
-msgid "Choose the version of KoD to install"
+msgid "Choose the version of S4Me to install"
 msgstr ""
 
 msgctxt "#80034"
@@ -6469,7 +6469,7 @@ msgid "Include local episodes when adding a TV shows"
 msgstr ""
 
 msgctxt "#80043"
-msgid "Attention, in order to watch local episodes you have to configure the Kodi video library from KoD settings"
+msgid "Attention, in order to watch local episodes you have to configure the Kodi video library from S4Me settings"
 msgstr ""
 
 msgctxt "#80044"
@@ -6477,7 +6477,7 @@ msgid "Do you want to include local episodes for the TV show "%s"?"
 msgstr ""
 
 msgctxt "#80045"
-msgid "The folder of the local episodes has to be different from the TV show one in the KoD video library"
+msgid "The folder of the local episodes has to be different from the TV show one in the S4Mevideo library"
 msgstr ""
 
 msgctxt "#80046"
@@ -6501,21 +6501,21 @@ msgid "Downloading..."
 msgstr ""
 
 msgctxt "#90001"
-msgid "KOD options"
-msgstr "KOD options..."
+msgid "S4Me options"
+msgstr "S4Me options..."
 
 msgctxt "#90002"
 msgid "No TMDB found"
 msgstr "No TmdbId found, cannot continue"
 
 msgctxt "#90003"
-msgid "Already on KOD, continue searching on other channels?"
-msgstr "Item is coming from KOD, continue searching on other channels?"
+msgid "Already on S4Me, continue searching on other channels?"
+msgstr "Item is coming from S4Me, continue searching on other channels?"
 
 msgctxt "#90004"
 msgid "No contextmenu option"
 msgstr "No options"
 
 msgctxt "#90005"
-msgid "Search on KOD"
-msgstr "Search with KOD"
+msgid "Search on S4Me"
+msgstr "Search with S4Me"

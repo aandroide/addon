@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Kodi on Demand - Kodi Addon - Kodi Addon
+# Stream4Me
 # by DrZ3r0 - Fix Alhaziel
 
 import json

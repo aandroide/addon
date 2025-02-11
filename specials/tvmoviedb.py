@@ -45,7 +45,7 @@ def mainlist(item):
             item.clone(title=config.get_localized_string(70021) % (config.get_localized_string(30123), 'IMDB'), action="imdb", args="tv", url='&title_type=tv_series,tv_special,mini_series', thumbnail=thumb('search_tvshow')),
             item.clone(title=config.get_localized_string(70415), action="trakt", thumbnail="http://i.imgur.com/5sQjjuk.png"),
             item.clone(title=config.get_localized_string(70026), action="mal", thumbnail="http://i.imgur.com/RhsYWmd.png"),
-            item.clone(title=typo(config.get_localized_string(70027), 'color kod'), action="configuracion", folder=False)
+            item.clone(title=typo(config.get_localized_string(70027), 'color std'), action="configuracion", folder=False)
         ]
     return itemlist
 
@@ -131,8 +131,8 @@ def tmdb(item):
         itemlist.append(item.clone(title=config.get_localized_string(70036), action="search_", search={'url': 'search/person', 'language': langt, 'page': 1}))
         if item.args == "movie": itemlist.append(item.clone(title=config.get_localized_string(70037), action="search_", search={'url': "search/person", 'language': langt, 'page': 1}, crew=True))
 
-    itemlist.append(item.clone(title=typo(config.get_localized_string(70038),'color kod'), action="filter", ))
-    itemlist.append(item.clone(title=typo(config.get_localized_string(70039),'color kod'), action="filter", ))
+    itemlist.append(item.clone(title=typo(config.get_localized_string(70038),'color std'), action="filter", ))
+    itemlist.append(item.clone(title=typo(config.get_localized_string(70039),'color std'), action="filter", ))
 
     return thumb(itemlist)
 
@@ -156,7 +156,7 @@ def imdb(item):
         itemlist.append(item.clone(title=config.get_localized_string(30980), action="search_", url="http://www.imdb.com/search/title?title={}" + item.url))
         itemlist.append(item.clone(title=config.get_localized_string(70036), action="search_", url="http://www.imdb.com/search/name?name={}"))
 
-    itemlist.append(item.clone(title=typo(config.get_localized_string(70038),'color kod'), action="filter_imdb", ))
+    itemlist.append(item.clone(title=typo(config.get_localized_string(70038),'color std'), action="filter_imdb", ))
 
     return thumb(itemlist)
 
@@ -213,7 +213,7 @@ def trakt(item):
         itemlist.append(item.clone(title=typo(config.get_localized_string(30123), 'bold') + typo(config.get_localized_string(70053),'[] _'), action="acciones_trakt", url="shows/watched/all%s" % page))
         itemlist.append(item.clone(title=typo(config.get_localized_string(30123), 'bold') + typo(config.get_localized_string(70051),'[] _'), action="acciones_trakt", url="shows/anticipated%s" % page))
         if token_auth: itemlist.append(item.clone(title=typo(config.get_localized_string(30123), 'bold') + typo(config.get_localized_string(70052),'[] _'), action="acciones_trakt", url="recommendations/shows?limit=100&extended=full", pagina=0))
-        itemlist.append(item.clone(title=typo(config.get_localized_string(70048), 'color kod'), args="cuenta"))
+        itemlist.append(item.clone(title=typo(config.get_localized_string(70048), 'color std'), args="cuenta"))
     else:
         item.args = "movie"
         # A saved token is checked and the authentication process is executed
@@ -230,7 +230,7 @@ def trakt(item):
             itemlist.append(item.clone(title=typo(config.get_localized_string(30123),'bold') + typo(config.get_localized_string(70056),'_ []'), action="acciones_trakt", url="users/me/watched/shows%s" % page, args="show", order="added", how="desc"))
             itemlist.append(item.clone(title=typo(config.get_localized_string(30123),'bold') + typo(config.get_localized_string(70068),'_ []'), action="acciones_trakt", url="users/me/collection/shows%s" % page, args="show", order="added", how="desc"))
 
-            itemlist.append(item.clone(title=typo(config.get_localized_string(70057),'color kod bold'), action="acciones_trakt", url="users/me/lists", ))
+            itemlist.append(item.clone(title=typo(config.get_localized_string(70057),'color std bold'), action="acciones_trakt", url="users/me/lists", ))
 
     return itemlist
 
@@ -250,9 +250,9 @@ def mal(item):
     itemlist.append(item.clone(title=config.get_localized_string(70063), url="", action="indices_mal"))
     if config.get_platform() != "plex":
         itemlist.append(item.clone(title=config.get_localized_string(70064), url="https://myanimelist.net/anime.php?q=", action="search_"))
-    itemlist.append(item.clone(title=typo(config.get_localized_string(70038), 'color kod'), action="filter_mal"))
+    itemlist.append(item.clone(title=typo(config.get_localized_string(70038), 'color std'), action="filter_mal"))
 
-    itemlist.append(item.clone(title=typo(config.get_localized_string(70057), 'color kod'), action="cuenta_mal"))
+    itemlist.append(item.clone(title=typo(config.get_localized_string(70057), 'color std'), action="cuenta_mal"))
 
     return itemlist
 
@@ -287,8 +287,8 @@ def list_tmdb(item):
                 if new_item.infoLabels['thumbnail']: new_item.thumbnail = new_item.infoLabels['thumbnail']
                 if new_item.infoLabels['fanart']: new_item.fanart = new_item.infoLabels['fanart']
 
-                if new_item.infoLabels['year']: new_item.title = typo(new_item.contentTitle, 'bold') + ' (%s)' % new_item.infoLabels['year'] + typo(str(new_item.infoLabels['rating']).replace("0.0", ""), '_ color kod')
-                else: new_item.title = typo(new_item.contentTitle, 'bold') + ' (%s)' % new_item.infoLabels['year'] + typo(str(new_item.infoLabels['rating']).replace("0.0", ""), '_ color kod')
+                if new_item.infoLabels['year']: new_item.title = typo(new_item.contentTitle, 'bold') + ' (%s)' % new_item.infoLabels['year'] + typo(str(new_item.infoLabels['rating']).replace("0.0", ""), '_ color std')
+                else: new_item.title = typo(new_item.contentTitle, 'bold') + ' (%s)' % new_item.infoLabels['year'] + typo(str(new_item.infoLabels['rating']).replace("0.0", ""), '_ color std')
                 itemlist.append(new_item)
             itemlist.sort(key=lambda item: item.infoLabels["year"])
         except:
@@ -335,7 +335,7 @@ def list_tmdb(item):
                 if not 'person' in item.search["url"] or 'tv_credits' in item.search["url"]:
                     new_item.title = typo(new_item.contentTitle,'bold')
                     if new_item.infoLabels['year']: new_item.title += typo(new_item.infoLabels['year'],'_ () bold')
-                    if new_item.infoLabels['rating'] != '0.0': new_item.title += typo(new_item.infoLabels['rating'],'_ [] color kod bold')
+                    if new_item.infoLabels['rating'] != '0.0': new_item.title += typo(new_item.infoLabels['rating'],'_ [] color std bold')
                 else:
                     # If it is a search for people, a film for which it is known is included in the title and fanart
                     known_for = ob_tmdb.results[i].get("known_for")
@@ -343,7 +343,7 @@ def list_tmdb(item):
                     if known_for:
                         from random import randint
                         random = randint(0, len(known_for) - 1)
-                        new_item.title = typo(new_item.contentTitle, 'bold') + typo(known_for[random].get("title", known_for[random].get("name")), '_ () color kod')
+                        new_item.title = typo(new_item.contentTitle, 'bold') + typo(known_for[random].get("title", known_for[random].get("name")), '_ () color std')
 
                         if known_for[random]["backdrop_path"]:
                             new_item.fanart = 'https://image.tmdb.org/t/p/original' + known_for[random]["backdrop_path"]
@@ -358,7 +358,7 @@ def list_tmdb(item):
             itemlist.sort(key=lambda item: item.infoLabels["year"], reverse=True)
         if "page" in item.search and ob_tmdb.total_pages > item.search["page"]:
             item.search["page"] += 1
-            itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color kod bold'), pagina=item.pagina + 1, thumbnail=thumb()))
+            itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color std bold'), pagina=item.pagina + 1, thumbnail=thumb()))
 
     return itemlist
 
@@ -719,7 +719,7 @@ def musica_movie(item):
     data = match(item).data
     matches = match(data, patron=r'<td class="left">([^<]+)<br><small>([^<]+)</small>.*?<td>(\d+:\d+).*?<p id="([^"]+)"').matches
     for title, artist, duration, id_p in matches:
-        title = typo(title, 'bold') + typo(artist, '_ () bold') + typo(duration, '_ [] color kod bold')
+        title = typo(title, 'bold') + typo(artist, '_ () bold') + typo(duration, '_ [] color std bold')
         url = match(data, patron=r"AudioPlayer.embed\('%s'.*?soundFile: '([^']+)'" % id_p).match
         itemlist.append(Item(channel=item.channel, action="play", server="directo", url=url, title=title, thumbnail=item.thumbnail, fanart=item.fanart, ))
     return itemlist
@@ -762,7 +762,7 @@ def list_imdb(item):
 
             info = info.strip()
             if info: new_item.infoLabels['plot'] = htmlclean(info)
-            new_item.title = typo(title.strip(), 'bold') + typo(movie.strip(),'_ () color kod bold')
+            new_item.title = typo(title.strip(), 'bold') + typo(movie.strip(),'_ () color std bold')
             new_item.infoLabels['imdb_id'] = imdb_id
             new_item.search = {'url': 'find/%s' % imdb_id, 'external_source': 'imdb_id', 'language': langt}
             itemlist.append(new_item)
@@ -803,19 +803,19 @@ def list_imdb(item):
                     try: rating = float(rating) / 10
                     except: rating = None
                 if rating:
-                    new_item.title += typo(str(rating), '_ [] color kod')
+                    new_item.title += typo(str(rating), '_ [] color std')
                     new_item.infoLabels['rating'] = float(rating)
             new_item.infoLabels['imdb_id'] = imdb_id
             itemlist.append(new_item)
 
     match_data = match(data, patron=r'<option selected="selected"[^>]+>\s*([A-Za-z]+)[^\d]+(\d+)\s*</option').match
     if match_data:
-        itemlist.insert(0, Item(title=typo('%s %s' % match_data, '_ bold color kod'), thumbnail=thumb('year')))
+        itemlist.insert(0, Item(title=typo('%s %s' % match_data, '_ bold color std'), thumbnail=thumb('year')))
 
     next_page = match(data, patron=r'<a href="([^"]+)"[^>]*>Next').match
     if next_page:
         next_page = 'http://www.imdb.com' + next_page
-        itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color kod bold'), url=next_page, thumbnail=thumb()))
+        itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color std bold'), url=next_page, thumbnail=thumb()))
 
     return itemlist
 
@@ -1015,7 +1015,7 @@ def indices_imdb(item):
 #                 new_item.thumbnail = thumb.replace("msmall", "large")
 #                 if not new_item.thumbnail.startswith("http"): new_item.thumbnail = "http://m.filmaffinity.com" + new_item.thumbnail
 
-#                 new_item.title = typo(title,'bold') + typo(rating,'_ [] color kod bold')
+#                 new_item.title = typo(title,'bold') + typo(rating,'_ [] color std bold')
 #                 new_item.infoLabels['duration'] = int(duration) * 60
 #                 new_item.infoLabels['rating'] = float(rating.replace(",", "."))
 #                 new_item.infoLabels['year'] = year
@@ -1105,7 +1105,7 @@ def indices_imdb(item):
 #         next_page = match(data, patron = r'<a href="([^"]+)">&gt;&gt;').match# scrapertools.find_single_match(data, '<a href="([^"]+)">&gt;&gt;')
 #         if next_page:
 #             if not next_page.startswith("http://www.filmaffinity.com"): next_page = "http://www.filmaffinity.com" + next_page
-#             itemlist.append(Item(channel=item.channel, action=item.action, title=typo(config.get_localized_string(30992), 'color kod bold'), url=next_page, args=item.args))
+#             itemlist.append(Item(channel=item.channel, action=item.action, title=typo(config.get_localized_string(30992), 'color std bold'), url=next_page, args=item.args))
 #     elif config.get_localized_string(70032) in item.title:
 #         bloque = scrapertools.find_single_match(data, '="genre">.*?</option>(.*?)</select>')
 #         matches = scrapertools.find_multiple_matches(bloque, '<option value="([^"]+)">([^<]+)</option>')
@@ -1950,7 +1950,7 @@ def acciones_trakt(item):
             tmdb.set_infoLabels_itemlist(itemlist[:-1], True)
             for i, new_item in enumerate(itemlist[:-1]):
                 if new_item.infoLabels["title"]: new_item.title = typo(new_item.infoLabels["title"] + "  (%s)" % new_item.infoLabels["year"], 'bold')
-                if ratings[i]: new_item.title += typo("Trakt: %.2f | Tmdb: %.2f"  % (ratings[i], new_item.infoLabels["rating"]), '_ [] color kod')
+                if ratings[i]: new_item.title += typo("Trakt: %.2f | Tmdb: %.2f"  % (ratings[i], new_item.infoLabels["rating"]), '_ [] color std')
         except:
             pass
 
@@ -1992,12 +1992,12 @@ def acciones_trakt(item):
                 tmdb.set_infoLabels_itemlist(itemlist[1:], True)
                 for i, new_item in enumerate(itemlist[1:]):
                     if new_item.infoLabels["title"]: new_item.title = typo(new_item.infoLabels["title"] + ' ' + new_item.infoLabels["year"], 'bold')
-                    if ratings[i]: new_item.title += typo("Trakt: %.2f | Tmdb: %.2f"  % (ratings[i], new_item.infoLabels["rating"]), '_ [] color kod')
+                    if ratings[i]: new_item.title += typo("Trakt: %.2f | Tmdb: %.2f"  % (ratings[i], new_item.infoLabels["rating"]), '_ [] color std')
             else:
                 tmdb.set_infoLabels_itemlist(itemlist, True)
                 for i, new_item in enumerate(itemlist):
                     if new_item.infoLabels["title"]: new_item.title = typo(new_item.infoLabels["title"] + " (%s)" % new_item.infoLabels["year"], 'bold')
-                    if ratings[i]: new_item.title += typo("Trakt: %.2f | Tmdb: %.2f"  % (ratings[i], new_item.infoLabels["rating"]), '_ [] color kod')
+                    if ratings[i]: new_item.title += typo("Trakt: %.2f | Tmdb: %.2f"  % (ratings[i], new_item.infoLabels["rating"]), '_ [] color std')
         except:
             import traceback
             logger.error(traceback.format_exc())
@@ -2006,12 +2006,12 @@ def acciones_trakt(item):
             page = match(item.url, patron=r'page=(\d+)').match
             page_new = int(page) + 1
             url = item.url.replace("page=" + page, "page=" + str(page_new))
-            itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color kod bold'), url=url, thumbnail=thumb()))
+            itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color std bold'), url=url, thumbnail=thumb()))
     else:
         data = jsontools.load(data)
         for entry in data:
             new_item = item.clone()
-            new_item.title = typo(entry["name"],'bold') + typo(str(entry["item_count"]),'color kod bold _ []')
+            new_item.title = typo(entry["name"],'bold') + typo(str(entry["item_count"]),'color std bold _ []')
             new_item.infoLabels["plot"] = entry.get("description")
             new_item.url = "users/me/lists/%s/items/?page=1&limit=20&extended=full" % entry["ids"]["trakt"]
             new_item.order = entry.get("sort_by")
@@ -2074,7 +2074,7 @@ def top_mal(item):
             new_item.title += typo(year,'_ () bold')
         if rating != "N/A":
             new_item.infoLabels["rating"] = float(rating)
-            new_item.title += typo(rating, '_ [] color kod bold')
+            new_item.title += typo(rating, '_ [] color std bold')
         # if not item.args:
         info = info.replace("(1 eps)", "").replace("TV ", "")
         if "Movie" in info or "Special" in info:
@@ -2092,7 +2092,7 @@ def top_mal(item):
     next_page = match(matches.data, patron=r'limit=(\d+)" class="link-blue-box next">').match
     if next_page:
         next_page = item.url.rsplit("=", 1)[0] + "=%s" % next_page
-        itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color kod bold'), url=next_page, thumbnail=thumb()))
+        itemlist.append(item.clone(title=typo(config.get_localized_string(30992), 'color std bold'), url=next_page, thumbnail=thumb()))
 
     return itemlist
 
@@ -2853,7 +2853,7 @@ def items_mal(item):
         if d["anime_url"].startswith('http'): url= d["anime_url"].replace("\\", "")
         else: url = "https://myanimelist.net" + d["anime_url"].replace("\\", "")
         if d["score"] != 0:
-            title += typo(" Punt:%s" % (d["score"]),'color kod bold')
+            title += typo(" Punt:%s" % (d["score"]),'color std bold')
         if title.count("(TV)") == 2:
             title = title.replace("] (TV)", "]")
         elif title.count("(Movie)") == 2:

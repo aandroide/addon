@@ -55,7 +55,7 @@
                 <font>font13</font>
                 <textcolor>FFFFFFFF</textcolor>
                 <shadowcolor>00000000</shadowcolor>
-                <label>[UPPERCASE]$ADDON[plugin.video.kod 70821][/UPPERCASE]</label>
+                <label>[UPPERCASE]$ADDON[plugin.video.s4me 70821][/UPPERCASE]</label>
                 <align>left</align>
                 <aligny>center</aligny>
             </control>

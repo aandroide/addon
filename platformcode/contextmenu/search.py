@@ -10,11 +10,11 @@ from core import tmdb
 from core.item import Item
 
 addon_id = config.get_addon_core().getAddonInfo('id')
-global item_is_coming_from_kod
+global item_is_coming_from_addon
 
 
 def check_condition():
-    global item_is_coming_from_kod
+    global item_is_coming_from_addon
     logger.debug('check item condition')
     mediatype = xbmc.getInfoLabel('ListItem.DBTYPE')
 
@@ -27,15 +27,15 @@ def check_condition():
     logger.debug('filenamepath:', fileNameAndPath )
     logger.info('filepath:', filePath )
     
-    item_is_coming_from_kod = addon_id in filePath
-    if not item_is_coming_from_kod:
+    item_is_coming_from_addon = addon_id in filePath
+    if not item_is_coming_from_addon:
         videolibpath = config.get_setting("videolibrarypath")
         if filePath.startswith(videolibpath):
             pattern = re.compile("\[.*\][\\\/]?$")
-            item_is_coming_from_kod = pattern.search(filePath)
+            item_is_coming_from_addon = pattern.search(filePath)
 
-    if item_is_coming_from_kod:
-        logger.debug("item IS already managed by KOD")
+    if item_is_coming_from_addon:
+        logger.debug("item IS already managed by S4Me")
 
     return mediatype
 
@@ -43,7 +43,7 @@ def check_condition():
 def get_menu_items():
     logger.debug('get menu item')
     if check_condition():
-        return [(config.get_localized_string(90003 if item_is_coming_from_kod else 90005), execute)]
+        return [(config.get_localized_string(90003 if item_is_coming_from_addon else 90005), execute)]
     else:
         return []
 
@@ -51,7 +51,7 @@ def get_menu_items():
 def execute():
     """
     Gather the selected ListItem's attributes in order to compute the `Item` parameters
-    and perform the KOD's globalsearch.
+    and perform the S4Me's globalsearch.
     Globalsearch will be executed specifing the content-type of the selected ListItem
 
     NOTE: this method needs the DBTYPE and TMDB_ID specified as ListItem's properties
@@ -61,7 +61,7 @@ def execute():
     # In future, they could be used to filter the search outcome
 
     # ADDON: maybe can we know if the current windows is related to a specific addon?
-    # we could skip the ContextMenu if we already are in KOD's window
+    # we could skip the ContextMenu if we already are in S4Me's window
 
     tmdbid = xbmc.getInfoLabel('ListItem.Property(tmdb_id)')
     mediatype = xbmc.getInfoLabel('ListItem.DBTYPE')
@@ -122,9 +122,9 @@ def execute():
     itemurl = item.tourl()
 
     if config.get_setting('new_search'):
-        xbmc.executebuiltin("RunPlugin(plugin://plugin.video.kod/?" + itemurl + ")")
+        xbmc.executebuiltin("RunPlugin(plugin://plugin.video.s4me/?" + itemurl + ")")
     else:
-        xbmc.executebuiltin("Container.Update(plugin://plugin.video.kod/?" + itemurl + ")")
+        xbmc.executebuiltin("Container.Update(plugin://plugin.video.s4me/?" + itemurl + ")")
 
 
 

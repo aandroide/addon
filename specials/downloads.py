@@ -124,11 +124,11 @@ def mainlist(item):
         itemlist.insert(0, Item(channel=item.channel, action="browser", title=support.typo(config.get_localized_string(70222),'bold'), thumbnail=get_thumb('search.png'), url=DOWNLOAD_PATH))
 
     if not item.contentType == "tvshow":
-        itemlist.append(Item(channel='shortcuts', action="SettingOnPosition", category=6, setting=0, title= support.typo(config.get_localized_string(70288),'bold color kod'), thumbnail=get_thumb('setting_0.png')))
+        itemlist.append(Item(channel='shortcuts', action="SettingOnPosition", category=6, setting=0, title= support.typo(config.get_localized_string(70288),'bold color std'), thumbnail=get_thumb('setting_0.png')))
 
     # Reload
     if estados:
-        itemlist.insert(0, Item(channel=item.channel, action="reload", title= support.typo(config.get_localized_string(70008),'bold color kod'),
+        itemlist.insert(0, Item(channel=item.channel, action="reload", title= support.typo(config.get_localized_string(70008),'bold color std'),
                                 contentType=item.contentType, contentChannel=item.contentChannel, thumbnail=get_thumb('update.png'),
                                 contentSerieName=item.contentSerieName))
 
@@ -252,7 +252,7 @@ def restart_error(item):
 def download_all(item):
     time.sleep(0.5)
     item.action = "download_all_background"
-    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.kod/?" + item.tourl() + ")")
+    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.s4me/?" + item.tourl() + ")")
     platformtools.itemlist_refresh()
 
 
@@ -328,7 +328,7 @@ def menu(item):
     # Start Download
     if opciones[seleccion] == op[0]:
         item.action = "start_download"
-        xbmc.executebuiltin("RunPlugin(plugin://plugin.video.kod/?" + item.tourl() + ")")
+        xbmc.executebuiltin("RunPlugin(plugin://plugin.video.s4me/?" + item.tourl() + ")")
 
     # Select Server
     if opciones[seleccion] == op[3]:
@@ -967,7 +967,7 @@ def save_download(item):
 
     item.channel = "downloads"
     item.action = "save_download_background"
-    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.kod/?" + item.tourl() + ")")
+    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.s4me/?" + item.tourl() + ")")
 
 
 def save_download_background(item):
@@ -1025,7 +1025,7 @@ def save_download_videolibrary(item):
     item.contentChannel = 'videolibrary'
     item.channel = "downloads"
     item.action = "save_download_background"
-    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.kod/?" + item.tourl() + ")")
+    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.s4me/?" + item.tourl() + ")")
 
 
 def save_download_video(item):

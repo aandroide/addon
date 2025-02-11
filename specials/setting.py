@@ -365,7 +365,7 @@ def check_quickfixes(item):
     if not config.dev_mode():
         from platformcode import updater
         if not updater.check()[0]:
-            platformtools.dialog_ok('Kodi on Demand', config.get_localized_string(70667))
+            platformtools.dialog_ok(config.get_localized_string(20000), config.get_localized_string(70667))
     else:
         return False
 
@@ -707,7 +707,7 @@ def restore_tools(item):
     if seleccion == 1:
         # tvshows
         heading = config.get_localized_string(60584)
-        p_dialog = platformtools.dialog_progress_bg(config.get_localized_string(60585), heading)
+        p_dialog = platformtools.dialog_progress_bg(config.get_localized_string(20000), heading)
         p_dialog.update(0, '')
 
         show_list = []
@@ -721,9 +721,9 @@ def restore_tools(item):
             head_nfo, serie = videolibrarytools.read_nfo(tvshow_file)
             path = filetools.dirname(tvshow_file)
 
-            if not serie.active:
+            #if not serie.active:
                 # if the series is not active discard
-                continue
+            #    continue
 
             # We delete the folder with the series ...
             if tvshow_file.endswith('.strm') or tvshow_file.endswith('.json') or tvshow_file.endswith('.nfo'):
@@ -736,7 +736,7 @@ def restore_tools(item):
 
         # movies
         heading = config.get_localized_string(60586)
-        p_dialog2 = platformtools.dialog_progress_bg(config.get_localized_string(60585), heading)
+        p_dialog2 = platformtools.dialog_progress_bg(config.get_localized_string(20000), heading)
         p_dialog2.update(0, '')
 
         movies_list = []
@@ -834,12 +834,9 @@ def report_menu(item):
                     title=config.get_localized_string(60308),
                     thumbnail=thumb_next, folder=False))
         itemlist.append(Item(channel=item.channel, action="call_browser",
-                             title="su Github (raccomandato)", url='https://github.com/kodiondemand/addon/issues',
+                             title="su Github (raccomandato)", url='https://github.com/stream4me/addon/issues',
                              thumbnail=thumb_next,
                              folder=False))
-        itemlist.append(Item(channel=item.channel, action="call_browser",
-                             url='https://t.me/kodiondemand', title="Su telegram",
-                             thumbnail=thumb_next, unify=False, folder=False))
 
     return itemlist
 
@@ -1171,9 +1168,9 @@ def report_send(item, description='', fatal=False):
             status = True                                               # Upload operation completed successfully
             logger.info('Report created: ' + str(item.url))    # The URL of the user report is saved
             # if fatal:                                                   # For future use, for logger.crash
-            #     platformtools.dialog_ok('KoD CREATED ERROR report', 'Report it in the forum by adding FATAL ERROR and this URL: ', '[COLOR gold]%s[/COLOR]' % item.url, pastebin_one_use_msg)
+            #     platformtools.dialog_ok('S4MeCREATED ERROR report', 'Report it in the forum by adding FATAL ERROR and this URL: ', '[COLOR gold]%s[/COLOR]' % item.url, pastebin_one_use_msg)
             # else:                                                       # Report URL passed to user
-            #     platformtools.dialog_ok('KoD Crash Report CREATED', 'Report it on the forum by adding a bug description and this URL: ', '[COLOR gold]%s[/COLOR]' % item.url, pastebin_one_use_msg)
+            #     platformtools.dialog_ok('S4MeCrash Report CREATED', 'Report it on the forum by adding a bug description and this URL: ', '[COLOR gold]%s[/COLOR]' % item.url, pastebin_one_use_msg)
 
             break                                                       # Operation finished, we don't keep looking
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # use export PYTHONPATH=addon source code
 # and inside .kodi to run tests locally
-# you can pass specific channel name using KOD_TST_CH environment var
+# you can pass specific channel name using S4ME_TST_CH environment var
 
-# export PYTHONPATH=/home/user/.kodi/addons/plugin.video.kod
-# export KOD_TST_CH=channel
+# export PYTHONPATH=/home/user/.kodi/addons/plugin.video.s4me
+# export S4ME_TST_CH=channel
 # python tests/test_generic.py
 import html
 import os
@@ -15,13 +15,13 @@ import unittest
 import datetime
 import xbmc
 
-if 'KOD_TST_CH' not in os.environ:
+if 'S4ME_TST_CH' not in os.environ:
     from sakee import addoninfo
     # custom paths
     def add_on_info(*args, **kwargs):
         return addoninfo.AddonData(
             kodi_home_path=os.path.join(os.getcwd(), 'tests', 'home'),
-            add_on_id='plugin.video.kod',
+            add_on_id='plugin.video.s4me',
             add_on_path=os.getcwd(),
             kodi_profile_path=os.path.join(os.getcwd(), 'tests', 'home', 'userdata')
         )
@@ -152,7 +152,7 @@ def wait():
 
 servers = []
 channels = []
-channel_list = channelselector.filterchannels("all") if 'KOD_TST_CH' not in os.environ else [Item(channel=os.environ['KOD_TST_CH'], action="mainlist")]
+channel_list = channelselector.filterchannels("all") if 'S4ME_TST_CH' not in os.environ else [Item(channel=os.environ['S4ME_TST_CH'], action="mainlist")]
 logger.DEBUG_ENABLED = True
 logger.info([c.channel for c in channel_list])
 results = []
@@ -317,7 +317,7 @@ class GenericChannelMenuItemTest(unittest.TestCase):
         if self.ch in chNumRis:  # i know how much results should be
             for content in chNumRis[self.ch]:
                 if content in self.title:
-                    risNum = len([i for i in self.itemlist if i.title != typo(config.get_localized_string(30992), 'color kod bold')])  # not count nextpage
+                    risNum = len([i for i in self.itemlist if i.title != typo(config.get_localized_string(30992), 'color std bold')])  # not count nextpage
                     if 'Search' not in self.title:
                         self.assertEqual(chNumRis[self.ch][content], risNum,
                                          'channel ' + self.ch + ' -> ' + self.title + ' returned wrong number of results<br>'
@@ -339,7 +339,7 @@ class GenericChannelMenuItemTest(unittest.TestCase):
                 self.assert_(type(resIt.infoLabels['year']) is int or resIt.infoLabels['year'].isdigit(), msgYear)
                 self.assert_(1900 < int(resIt.infoLabels['year']) < 2100, msgYear)
 
-            if resIt.title == typo(config.get_localized_string(30992), 'color kod bold'):  # next page
+            if resIt.title == typo(config.get_localized_string(30992), 'color std bold'):  # next page
                 nextPageItemlist = getattr(self.module, resIt.action)(resIt)
                 self.assertTrue(nextPageItemlist,
                                 'channel ' + self.ch + ' -> ' + self.title + ' has nextpage not working')
@@ -395,6 +395,6 @@ class GenericServerTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(report_name='report', add_timestamp=False, combine_reports=True,
-                 report_title='KoD Test Suite', template=os.path.join(config.get_runtime_path(), 'tests', 'template.html')), exit=False)
+                 report_title='S4MeTest Suite', template=os.path.join(config.get_runtime_path(), 'tests', 'template.html')), exit=False)
     import webbrowser
     webbrowser.open(os.path.join(outDir, 'report.html'))

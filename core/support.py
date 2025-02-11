@@ -205,7 +205,7 @@ def scrapeLang(scraped, lang, longtitle):
         if 'sub' in scraped['lang'].lower(): language = 'Sub-' + language
 
     if not language: language = lang
-    if language: longtitle += typo(language, '_ [] color kod')
+    if language: longtitle += typo(language, '_ [] color std')
     return language, longtitle
 
 
@@ -224,8 +224,8 @@ def format_longtitle(title, season = None, episode = None, quality = None, lang 
     else:
         longtitle = title
     longtitle = typo(longtitle, 'bold')
-    longtitle += typo(lang, '_ [] color kod') if lang else ''
-    longtitle += typo(quality, '_ [] color kod') if quality else ''
+    longtitle += typo(lang, '_ [] color std') if lang else ''
+    longtitle += typo(quality, '_ [] color std') if quality else ''
 
     return longtitle
 
@@ -445,9 +445,9 @@ def scrapeBlock(item, args, block, patron, headers, action, pagination, debug, t
 
         longtitle = typo(longtitle, 'bold')
         lang1, longtitle = scrapeLang(scraped, lang, longtitle)
-        longtitle += typo(quality, '_ [] color kod') if quality else ''
-        longtitle += typo(scraped['size'], '_ [] color kod') if scraped['size'] else ''
-        longtitle += typo(scraped['seed'] + ' SEEDS', '_ [] color kod') if scraped['seed'] else ''
+        longtitle += typo(quality, '_ [] color std') if quality else ''
+        longtitle += typo(scraped['size'], '_ [] color std') if scraped['size'] else ''
+        longtitle += typo(scraped['seed'] + ' SEEDS', '_ [] color std') if scraped['seed'] else ''
 
         AC = CT = ''
         if typeContentDict:
@@ -513,7 +513,7 @@ def html_uniform(data):
 
 
 def scrape(func):
-    """https://github.com/kodiondemand/addon/wiki/decoratori#scrape"""
+    """https://github.com/stream4me/addon/wiki/decoratori#scrape"""
 
     def wrapper(*args):
         itemlist = []
@@ -577,7 +577,7 @@ def scrape(func):
                             it.contentLanguage, it.title = scrapeLang(bl, it.contentLanguage, it.title)
                         if 'quality' in bl and bl['quality']:
                             it.quality = bl['quality'].strip()
-                            it.title = it.title + typo(bl['quality'].strip(), '_ [] color kod')
+                            it.title = it.title + typo(bl['quality'].strip(), '_ [] color std')
                     itemlist.extend(blockItemlist)
                     matches.extend(blockMatches)
             elif patron:
@@ -650,9 +650,9 @@ def scrape(func):
         #     if it.contentEpisodeNumber and it.contentSeason:
         #         it.title = '[B]{:d}x{:02d} - {}[/B]'.format(it.contentSeason, it.contentEpisodeNumber, it.infoLabels['title'] if it.infoLabels['title'] else it.fulltitle)
         #         if it.contentLanguage:
-        #             it.title += typo(it.contentLanguage, '_ [] color kod')
+        #             it.title += typo(it.contentLanguage, '_ [] color std')
         #         if it.quality:
-        #             it.title += typo(it.quality, '_ [] color kod')
+        #             it.title += typo(it.quality, '_ [] color std')
 
         # next page for pagination
         if pagination and len(matches) > pag * pagination and not search:
@@ -661,7 +661,7 @@ def scrape(func):
                     Item(channel=item.channel,
                          action = item.action,
                          contentType=item.contentType,
-                         title=typo(config.get_localized_string(30992), 'color kod bold'),
+                         title=typo(config.get_localized_string(30992), 'color std bold'),
                          fulltitle= item.fulltitle,
                          show= item.show,
                          url=item.url,
@@ -811,7 +811,7 @@ def menuItem(itemlist, filename, title='', action='', url='', contentType='undef
 
 
 def menu(func):
-    """https://github.com/kodiondemand/addon/wiki/decoratori#menu"""
+    """https://github.com/stream4me/addon/wiki/decoratori#menu"""
 
     def wrapper(*args):
         args = func(*args)
@@ -914,7 +914,7 @@ def menu(func):
 
 def typo(string, typography=''):
 
-    kod_color = '0xFF65B3DA' #'0xFF0081C2'
+    std_color = '0xFF65B3DA' #'0xFF0081C2'
 
     try: string = str(string)
     except: string = str(string.encode('utf8'))
@@ -954,9 +954,9 @@ def typo(string, typography=''):
         if VLT: string = "•• " + string
         else: string = string
         typography = typography.replace('submenu', '')
-    if 'color kod' in typography:
-        string = '[COLOR ' + kod_color + ']' + string + '[/COLOR]'
-        typography = typography.replace('color kod', '')
+    if 'color std' in typography:
+        string = '[COLOR ' + std_color + ']' + string + '[/COLOR]'
+        typography = typography.replace('color std', '')
     elif 'color' in typography:
         color = scrapertools.find_single_match(typography, 'color ([a-zA-Z0-9]+)')
         string = '[COLOR ' + color + ']' + string + '[/COLOR]'
@@ -1104,7 +1104,7 @@ def match_dbg(data, patron):
 def download(itemlist, item, typography='', function_level=1, function=''):
     if config.get_setting('downloadenabled'):
 
-        if not typography: typography = 'color kod bold'
+        if not typography: typography = 'color std bold'
 
         if item.contentType == 'movie':
             from_action = 'findvideos'
@@ -1200,7 +1200,7 @@ def videolibrary(itemlist, item, typography='', function_level=1, function=''):
         except:
             break
 
-    if not typography: typography = 'color kod bold'
+    if not typography: typography = 'color std bold'
 
     title = typo(config.get_localized_string(30161), typography)
     contentSerieName=item.contentSerieName if item.contentSerieName else item.fulltitle if item.contentType != 'movie' else ''
@@ -1237,7 +1237,7 @@ def nextPage(itemlist, item, data='', patron='', function_or_level=1, next_page=
     if not data and not patron and not next_page:
         itemlist.append(
             item.clone(action = action,
-                       title=typo(config.get_localized_string(30992), 'color kod bold'),
+                       title=typo(config.get_localized_string(30992), 'color std bold'),
                        nextPage=True,
                        thumbnail=thumb()))
         return itemlist[-1]
@@ -1256,7 +1256,7 @@ def nextPage(itemlist, item, data='', patron='', function_or_level=1, next_page=
         logger.debug('NEXT= ', next_page)
         itemlist.append(
             item.clone(action = action,
-                       title=typo(config.get_localized_string(30992), 'color kod bold'),
+                       title=typo(config.get_localized_string(30992), 'color std bold'),
                        url=next_page,
                        nextPage=True,
                        thumbnail=thumb()))
@@ -1269,7 +1269,7 @@ def pagination(itemlist, item, page, perpage, function_level=1):
             Item(channel=item.channel,
                  action=inspect.stack(0)[function_level][3],
                  contentType=item.contentType,
-                 title=typo(config.get_localized_string(30992), 'color kod bold'),
+                 title=typo(config.get_localized_string(30992), 'color std bold'),
                  url=item.url,
                  args=item.args,
                  page=page + 1,
@@ -1392,7 +1392,7 @@ def channel_config(item, itemlist):
     itemlist.append(
         Item(channel='setting',
              action="channel_config",
-             title=typo(config.get_localized_string(60587), 'color kod bold'),
+             title=typo(config.get_localized_string(60587), 'color std bold'),
              config=item.channel,
              folder=False,
              thumbnail=thumb('setting_0'))
@@ -1464,9 +1464,9 @@ def addQualityTag(item, itemlist, data, patron):
                         audio = tag
                         break
                 if video:
-                    descr += typo(video + ': ', 'color kod') + defQualVideo.get(video, '') + '\n'
+                    descr += typo(video + ': ', 'color std') + defQualVideo.get(video, '') + '\n'
                 if audio:
-                    descr += typo(audio + ': ', 'color kod') + defQualAudio.get(audio, '') + '\n'
+                    descr += typo(audio + ': ', 'color std') + defQualAudio.get(audio, '') + '\n'
             except:
                 descr = ''
             itemlist.insert(0,Item(channel=item.channel,
@@ -1520,7 +1520,7 @@ def thumb(item_itemlist_string=None, genre=False, live=False):
 
     if live:
         def liveThumb(item):
-            thumb = 'https://raw.githubusercontent.com/kodiondemand/media/master/live/{}.png'.format(item.fulltitle.lower().replace(' ','_'))
+            thumb = 'https://raw.githubusercontent.com/Stream4me/media/master/live/{}.png'.format(item.fulltitle.lower().replace(' ','_'))
             if filetools.exists(thumb):
                 item.thumbnail = thumb
         if type(item_itemlist_string) == list:

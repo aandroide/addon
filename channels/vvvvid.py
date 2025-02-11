@@ -150,7 +150,7 @@ def peliculas(item):
             if inspect.stack(0)[1][3] != 'get_newest':
                 itlist.append(
                     item.clone(action='peliculas',
-                        title=support.typo(config.get_localized_string(30992), 'color kod bold'),
+                        title=support.typo(config.get_localized_string(30992), 'color std bold'),
                         fulltitle=item.fulltitle,
                         show=item.show,
                         url=item.url,

@@ -23,7 +23,7 @@ addonname = addon.getAddonInfo('name')
 _hdr_pat = re.compile("^@@ -(\d+),?(\d+)? \+(\d+),?(\d+)? @@.*")
 
 branch = 'stable'
-user = 'kodiondemand'
+user = 'stream4me'
 repo = 'addon'
 addonDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 maxPage = 5  # le api restituiscono 30 commit per volta, quindi se si è rimasti troppo indietro c'è bisogno di andare avanti con le pagine
@@ -95,7 +95,7 @@ def check(background=False):
                 if len(commitJson['files']) > 50:
                     localCommitFile.close()
                     c['sha'] = updateFromZip('Aggiornamento in corso...')
-                    localCommitFile = open(os.path.join(xbmc.translatePath("special://home/addons/"), 'plugin.video.kod', trackingFile), 'w')  # il file di tracking viene eliminato, lo ricreo
+                    localCommitFile = open(os.path.join(xbmc.translatePath("special://home/addons/"), 'plugin.video.s4me', trackingFile), 'w')  # il file di tracking viene eliminato, lo ricreo
                     changelog += commitJson['commit']['message'] + "\n"
                     poFilesChanged = True
                     serviceChanged = True
@@ -143,7 +143,7 @@ def check(background=False):
             localCommitFile.close()
             c['sha'] = updateFromZip('Aggiornamento in corso...')
             localCommitFile = open(
-                os.path.join(xbmc.translatePath("special://home/addons/"), 'plugin.video.kod', trackingFile),
+                os.path.join(xbmc.translatePath("special://home/addons/"), 'plugin.video.s4me', trackingFile),
                 'w')  # il file di tracking viene eliminato, lo ricreo
 
         localCommitFile.seek(0)
@@ -198,7 +198,7 @@ def calcCurrHash():
         logger.info('Non sono riuscito a trovare il commit attuale, scarico lo zip')
         hash = updateFromZip()
         # se ha scaricato lo zip si trova di sicuro all'ultimo commit
-        localCommitFile = open(os.path.join(xbmc.translatePath("special://home/addons/"), 'plugin.video.kod', trackingFile), 'w')
+        localCommitFile = open(os.path.join(xbmc.translatePath("special://home/addons/"), 'plugin.video.s4me', trackingFile), 'w')
         localCommitFile.write(hash if hash else lastCommitSha)
         localCommitFile.close()
 
@@ -226,7 +226,7 @@ def updateFromZip(message=config.get_localized_string(80050)):
     dp.update(0)
 
     remotefilename = 'https://github.com/' + user + "/" + repo + "/archive/" + branch + ".zip"
-    localfilename = filetools.join(xbmc.translatePath("special://home/addons/"), "plugin.video.kod.update.zip")
+    localfilename = filetools.join(xbmc.translatePath("special://home/addons/"), "plugin.video.s4me.update.zip")
     destpathname = xbmc.translatePath("special://home/addons/")
     extractedDir = filetools.join(destpathname, "addon-" + branch)
 
@@ -288,8 +288,8 @@ def updateFromZip(message=config.get_localized_string(80050)):
         removeTree(addonDir)
     xbmc.sleep(1000)
 
-    rename(extractedDir, 'plugin.video.kod')
-    addonDir = filetools.join(destpathname, 'plugin.video.kod')
+    rename(extractedDir, 'plugin.video.s4me')
+    addonDir = filetools.join(destpathname, 'plugin.video.s4me')
 
     logger.info("Cancellando il file zip...")
     remove(localfilename)

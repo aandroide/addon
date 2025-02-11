@@ -43,7 +43,7 @@ def update(path, p_dialog, i, t, serie, overwrite):
     head_nfo, it = videolibrarytools.read_nfo(nfo_file)
     videolibrarytools.update_renumber_options(it, head_nfo, path)
 
-    if not serie.library_url: serie = it
+    if not serie.library_urls: serie = it
     category = serie.category
 
     # logger.debug("%s: %s" %(serie.contentSerieName,str(list_canales) ))
@@ -81,7 +81,7 @@ def update(path, p_dialog, i, t, serie, overwrite):
                 try:
                     if int(overwrite) == 3:
                         # Overwrite all files (tvshow.nfo, 1x01.nfo, 1x01 [channel] .json, 1x01.strm, etc ...)
-                        insertados, sobreescritos, fallidos, notusedpath = videolibrarytools.save_tvshow(serie, itemlist)
+                        insertados, sobreescritos, fallidos, notusedpath = videolibrarytools.save_tvshow(serie, itemlist, override_active = True)
                         #serie= videolibrary.check_season_playcount(serie, serie.contentSeason)
                         #if filetools.write(path + '/tvshow.nfo', head_nfo + it.tojson()):
                         #    serie.infoLabels['playcount'] = serie.playcount
@@ -104,11 +104,11 @@ def update(path, p_dialog, i, t, serie, overwrite):
 
         else:
             logger.debug("Channel %s not active is not updated" % serie.channel)
-    # Synchronize the episodes seen from the Kodi video library with that of KoD
+    # Synchronize the episodes seen from the Kodi video library with that of S4Me
     try:
         if config.is_xbmc():                # If it's Kodi, we do it
             from platformcode import xbmc_videolibrary
-            xbmc_videolibrary.mark_content_as_watched_on_kod(filetools.join(path,'tvshow.nfo'))
+            xbmc_videolibrary.mark_content_as_watched_on_addon(filetools.join(path, 'tvshow.nfo'))
     except:
         logger.error(traceback.format_exc())
 
@@ -180,7 +180,7 @@ def check_for_update(overwrite=True):
                         try:
                             if config.is_xbmc():                # If it's Kodi, we do it
                                 from platformcode import xbmc_videolibrary
-                                xbmc_videolibrary.mark_content_as_watched_on_kod(filetools.join(path,'tvshow.nfo'))
+                                xbmc_videolibrary.mark_content_as_watched_on_addon(filetools.join(path, 'tvshow.nfo'))
                         except:
                             logger.error(traceback.format_exc())
 
@@ -421,7 +421,7 @@ class AddonMonitor(xbmc.Monitor):
             db['OnPlay']['addon'] = False
             db.close()
         elif method == 'VideoLibrary.OnUpdate':
-            xbmc_videolibrary.set_watched_on_kod(data)
+            xbmc_videolibrary.set_watched_on_addon(data)
             logger.debug('AGGIORNO')
 
     def onScreensaverActivated(self):
@@ -465,7 +465,7 @@ class AddonMonitor(xbmc.Monitor):
 
 
 if __name__ == "__main__":
-    logger.info('Starting KoD service')
+    logger.info('Starting S4Meservice')
 
     # Test if all the required directories are created
     config.verify_directories_created()
@@ -474,7 +474,7 @@ if __name__ == "__main__":
         xbmc.executebuiltin('RunAddon(plugin.video.' + config.PLUGIN_NAME + ')')
 
     # port old db to new
-    old_db_name = filetools.join(config.get_data_path(), "kod_db.sqlite")
+    old_db_name = filetools.join(config.get_data_path(), "s4me_db.sqlite")
     if filetools.isfile(old_db_name):
         try:
             import sqlite3
@@ -550,18 +550,18 @@ if __name__ == "__main__":
             db.close()
             logger.info('Relaunching service.py')
             xbmc.executeJSONRPC(
-                '{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "plugin.video.kod", "enabled": false }}')
+                '{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "plugin.video.s4me", "enabled": false }}')
             xbmc.executeJSONRPC(
-                '{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "plugin.video.kod", "enabled": true }}')
+                '{"jsonrpc": "2.0", "id":1, "method": "Addons.SetAddonEnabled", "params": { "addonid": "plugin.video.s4me", "enabled": true }}')
             logger.debug(threading.enumerate())
             break
 
         if monitor.waitForAbort(1): # every second
-            logger.debug('KoD service EXIT')
+            logger.debug('S4Meservice EXIT')
             # db need to be closed when not used, it will cause freezes
             join_threads()
             logger.debug('Close Threads')
             db.close()
             logger.debug('Close DB')
             break
-    logger.debug('KoD service STOPPED')
+    logger.debug('S4Meservice STOPPED')

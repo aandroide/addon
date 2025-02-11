@@ -20,4 +20,4 @@ def execute():
     item = Item(channel="trailertools", action="buscartrailer", search_title=title, contentType=mediatype,
                 year=year, contentTitle=title, contextual=True)
     item.infoLabels['tmdb_id'] = tmdbid
-    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.kod/?" + item.tourl() + ")")
+    xbmc.executebuiltin("RunPlugin(plugin://plugin.video.s4me/?" + item.tourl() + ")")

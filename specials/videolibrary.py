@@ -28,7 +28,7 @@ def mainlist(item):
                 Item(channel=item.channel, action="list_tvshows",title=config.get_localized_string(60600),
                      category=config.get_localized_string(70271), thumbnail=thumb("videolibrary_tvshow"),
                      context=[{"channel":"videolibrary", "action":"update_videolibrary", "title":config.get_localized_string(70269)}]),
-                Item(channel='shortcuts', action="SettingOnPosition", title=typo(config.get_localized_string(70287),'bold color kod'),
+                Item(channel='shortcuts', action="SettingOnPosition", title=typo(config.get_localized_string(70287),'bold color std'),
                      category=2, setting=1, thumbnail = thumb("setting_0"),folder=False)]
     return itemlist
 
@@ -85,9 +85,9 @@ def list_tvshows(item):
         itemlist = sorted(itemlist, key=lambda it: it.title.lower())
 
         itemlist += [Item(channel=item.channel, action="update_videolibrary", thumbnail=item.thumbnail,
-                          title=typo(config.get_localized_string(70269), 'bold color kod'), folder=False),
+                          title=typo(config.get_localized_string(70269), 'bold color std'), folder=False),
                      Item(channel=item.channel, action="configure_update_videolibrary", thumbnail=item.thumbnail,
-                          title=typo(config.get_localized_string(60599), 'bold color kod'), lista=lista, folder=False)]
+                          title=typo(config.get_localized_string(60599), 'bold color std'), lista=lista, folder=False)]
     return itemlist
 
 
@@ -689,7 +689,7 @@ def move_videolibrary(current_path, new_path, current_movies_folder, new_movies_
             notify = True
         filetools.rmdirtree(current_tvshows_path)
     progress.update(70)
-    if current_path != new_path and not filetools.listdir(current_path) and not "plugin.video.kod\\videolibrary" in current_path:
+    if current_path != new_path and not filetools.listdir(current_path) and not "plugin.video.s4me\\videolibrary" in current_path:
         filetools.rmdirtree(current_path)
 
     xbmc_videolibrary.update_sources(backup_new_path, backup_current_path)
@@ -1077,7 +1077,7 @@ def delete(item):
                         filetools.remove(filetools.join(item.path, episode + '.nfo'))
                         strm_path = filetools.join(item.path, episode + '.strm')
                         # if it is a local episode, do not delete the strm
-                        if 'plugin://plugin.video.kod/?' in filetools.read(strm_path):
+                        if 'plugin://plugin.video.s4me/?' in filetools.read(strm_path):
                             filetools.remove(strm_path)
                             path_list.append(filetools.join(item.extra, episode + '.strm'))
 
@@ -1157,7 +1157,7 @@ def add_download_items(item, itemlist):
         if not item.fromLibrary and not localOnly:
             downloadItem = Item(channel='downloads',
                                 from_channel=item.channel,
-                                title=typo(config.get_localized_string(60355), "color kod bold"),
+                                title=typo(config.get_localized_string(60355), "color std bold"),
                                 fulltitle=item.fulltitle,
                                 show=item.fulltitle,
                                 contentType=item.contentType,
@@ -1171,15 +1171,15 @@ def add_download_items(item, itemlist):
                                 parent=item.tourl())
             if item.action == 'findvideos':
                 if item.contentType != 'movie':
-                    downloadItem.title = '{} {}'.format(typo(config.get_localized_string(60356), "color kod bold"), item.title)
+                    downloadItem.title = '{} {}'.format(typo(config.get_localized_string(60356), "color std bold"), item.title)
                 else:  # film
-                    downloadItem.title = typo(config.get_localized_string(60354), "color kod bold")
+                    downloadItem.title = typo(config.get_localized_string(60354), "color std bold")
                 downloadItem.downloadItemlist = [i.tourl() for i in itemlist]
                 itemlist.append(downloadItem)
             else:
                 if item.contentSeason:  # season
-                    downloadItem.title = typo(config.get_localized_string(60357), "color kod bold")
+                    downloadItem.title = typo(config.get_localized_string(60357), "color std bold")
                     itemlist.append(downloadItem)
                 else:  # tvshow + not seen
                     itemlist.append(downloadItem)
-                    itemlist.append(downloadItem.clone(title=typo(config.get_localized_string(60003), "color kod bold"), unseen=True))
+                    itemlist.append(downloadItem.clone(title=typo(config.get_localized_string(60003), "color std bold"), unseen=True))

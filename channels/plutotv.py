@@ -101,7 +101,7 @@ def peliculas(item):
 
     support.tmdb.set_infoLabels_itemlist(itemlist, seekTmdb=True)
     if recordlist and not item.search:
-        itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color kod bold'), thumbnail=support.thumb(), args=recordlist))
+        itemlist.append(item.clone(title=support.typo(support.config.get_localized_string(30992), 'color std bold'), thumbnail=support.thumb(), args=recordlist))
     return itemlist
 
 

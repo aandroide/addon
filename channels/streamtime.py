@@ -123,7 +123,7 @@ def episodios(item):
                 season = season.split('-')[0]
             itemlist.append(
                 item.clone(action="findvideos",
-                           title=str(int(season)) + 'x' + str(n) + support.typo(item.quality, '-- [] color kod'),
+                           title=str(int(season)) + 'x' + str(n) + support.typo(item.quality, '-- [] color std'),
                            url=url,
                            contentType='episode',
                            folder=True,

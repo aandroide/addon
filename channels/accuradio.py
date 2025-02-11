@@ -20,15 +20,15 @@ def mainlist(item):
     for it in js.get('features',[]):
         itemlist.append(
             item.clone(url= '{}/{}'.format(host,it.get('canonical_url','')),
-                       title=support.typo(it['name'],'italic') + support.typo(it.get('channels',''),'_ [] color kod')
+                       title=support.typo(it['name'],'italic') + support.typo(it.get('channels',''),'_ [] color std')
             ))
     for it in js.get('brands',[]):
         itemlist.append(
             item.clone(url= '{}/{}'.format(host,it.get('canonical_url','')),
-                       title=support.typo(it['name'],'bullet bold') + support.typo(it.get('channels',''),'_ [] color kod')
+                       title=support.typo(it['name'],'bullet bold') + support.typo(it.get('channels',''),'_ [] color std')
             ))
 
-    itemlist.append(item.clone(title=support.typo('Cerca...', 'bold color kod'), action='search', thumbnail=support.thumb('search')))
+    itemlist.append(item.clone(title=support.typo('Cerca...', 'bold color std'), action='search', thumbnail=support.thumb('search')))
     support.channel_config(item, itemlist)
     return itemlist
 

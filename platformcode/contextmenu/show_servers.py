@@ -8,7 +8,7 @@ def get_menu_items():
     mediatype = xbmc.getInfoLabel('ListItem.DBTYPE')
     filePath = xbmc.getInfoLabel('ListItem.FileNameAndPath')
     res = []
-    if 'kod' in filePath and mediatype in ['movie', 'episode'] and config.get_setting('autoplay'):
+    if 's4me' in filePath and mediatype in ['movie', 'episode'] and config.get_setting('autoplay'):
         res = [(config.get_localized_string(70192), execute)]
     return res
 

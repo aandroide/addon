@@ -75,8 +75,8 @@ def set_key():
         from core import filetools
         from platformcode import platformtools
         import xbmc
-        file_xml = "special://profile/keymaps/kod.xml"
-        data = '<keymap><global><keyboard><key id="%s">' % new_key + 'runplugin(plugin://plugin.video.kod/?ew0KICAgICJhY3Rpb24iOiAia2V5bWFwIiwNCiAgICAib3BlbiI6IHRydWUNCn0=)</key></keyboard></global></keymap>'
+        file_xml = "special://profile/keymaps/s4me.xml"
+        data = '<keymap><global><keyboard><key id="%s">' % new_key + 'runplugin(plugin://plugin.video.s4me/?ew0KICAgICJhY3Rpb24iOiAia2V5bWFwIiwNCiAgICAib3BlbiI6IHRydWUNCn0=)</key></keyboard></global></keymap>'
         filetools.write(xbmc.translatePath(file_xml), data)
         # platformtools.dialog_notification(config.get_localized_string(70700),config.get_localized_string(70702),4)
 
@@ -90,7 +90,7 @@ def delete_key():
     from platformcode import platformtools
     import xbmc
 
-    filetools.remove(xbmc.translatePath( "special://profile/keymaps/kod.xml"))
+    filetools.remove(xbmc.translatePath( "special://profile/keymaps/s4me.xml"))
     # platformtools.dialog_notification(config.get_localized_string(70701),config.get_localized_string(70702),4)
 
     config.set_setting("shortcut_key", '')
@@ -148,9 +148,9 @@ class Main(xbmcgui.WindowXMLDialog):
             action = self.getControl(control_id).getSelectedItem().getProperty('run')
             self.close()
             if Item().fromurl(action).folder == False:
-                xbmc.executebuiltin('RunPlugin("plugin://plugin.video.kod/?' + action + '")')
+                xbmc.executebuiltin('RunPlugin("plugin://plugin.video.s4me/?' + action + '")')
             else:
-                xbmc.executebuiltin('ActivateWindow(10025, "plugin://plugin.video.kod/?' + action + '")')
+                xbmc.executebuiltin('ActivateWindow(10025, "plugin://plugin.video.s4me/?' + action + '")')
 
         elif control_id in [101]:
             self.setFocusId(2)

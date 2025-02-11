@@ -224,7 +224,7 @@
                     <texturenofocus colordiffuse='000082C2'>white.png</texturenofocus>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <label>$ADDON[plugin.video.kod 70007]</label>
+                    <label>$ADDON[plugin.video.s4me 70007]</label>
                 </control>
                 <control type='button' id='22'>
                     <width>222</width>
@@ -237,7 +237,7 @@
                     <texturenofocus colordiffuse='000082C2'>white.png</texturenofocus>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <label>$ADDON[plugin.video.kod 707433]</label>
+                    <label>$ADDON[plugin.video.s4me 707433]</label>
                 </control>
             </control>
         </control>

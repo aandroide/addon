@@ -83,7 +83,7 @@ def peliculas(item):
             if len(item.lang2)<3:
                 item.lang2 = 'ITA'
             item.contentLanguage = item.lang2
-            item.title += support.typo(item.lang2, '_ [] color kod')
+            item.title += support.typo(item.lang2, '_ [] color std')
         if item.args == 'update':
             item.title = item.title.replace('-', ' ')
         # if item.args == 'search':
@@ -157,10 +157,10 @@ def episodios(item):
                 # logger.debug(it.contentLanguage)
                 if item.args != 'anime':
                     for ep in episodes:
-                        ret.append(it.clone(title=typo(ep, 'bold') + typo(it.contentLanguage, '_ [] color kod bold'),
+                        ret.append(it.clone(title=typo(ep, 'bold') + typo(it.contentLanguage, '_ [] color std bold'),
                                  servers=[srv.tourl() for srv in episodes[ep]], contentSeason=int(ep.split('x')[0]), contentEpisodeNumber=int(ep.split('x')[1])))
                 else:
-                    ret.extend([it.clone(title=typo(ep, 'bold') + typo(it.contentLanguage, '_ [] color kod bold'),
+                    ret.extend([it.clone(title=typo(ep, 'bold') + typo(it.contentLanguage, '_ [] color std bold'),
                                          servers=[srv.tourl() for srv in episodes[ep]]) for ep in episodes])
             elif ep:
                 ret.append(it)

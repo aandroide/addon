@@ -21,8 +21,8 @@
     <setting id="delete_key" default="true"></setting>
     <setting id="download_adv" default="true"></setting>
     <setting id="downloadenabled" default="true">false</setting>
-    <setting id="downloadlistpath" default="true">special://profile/addon_data/plugin.video.kod/downloads/list/</setting>
-    <setting id="downloadpath" default="true">special://profile/addon_data/plugin.video.kod/downloads/</setting>
+    <setting id="downloadlistpath" default="true">special://profile/addon_data/plugin.video.s4me/downloads/list/</setting>
+    <setting id="downloadpath" default="true">special://profile/addon_data/plugin.video.s4me/downloads/</setting>
     <setting id="elementum_install" default="true"></setting>
     <setting id="elementum_on_seed" default="true">false</setting>
     <setting id="enable_channels_menu">true</setting>
@@ -45,11 +45,11 @@
     <setting id="infoplus" default="true">false</setting>
     <setting id="infoplus_set" default="true">false</setting>
     <setting id="install_trakt" default="true">true</setting>
-    <setting id="kod_menu">true</setting>
+    <setting id="s4me_menu">true</setting>
     <setting id="language" default="true">ITA</setting>
     <setting id="last_search">true</setting>
     <setting id="library_move">true</setting>
-    <setting id="lista_activa" default="true">kodfavorites-default.json</setting>
+    <setting id="lista_activa" default="true">addonfavorites-default.json</setting>
     <setting id="news_anime" default="true"></setting>
     <setting id="news_documentaries" default="true"></setting>
     <setting id="news_films" default="true"></setting>
@@ -74,7 +74,7 @@
     <setting id="servers_blacklist" default="true"></setting>
     <setting id="servers_config" default="true"></setting>
     <setting id="servers_favorites" default="true"></setting>
-    <setting id="settings_path" default="true">special://profile/addon_data/plugin.video.kod/settings_channels</setting>
+    <setting id="settings_path" default="true">special://profile/addon_data/plugin.video.s4me/settings_channels</setting>
     <setting id="shortcut_key" default="true"></setting>
     <setting id="show_once" default="true">true</setting>
     <setting id="side_menu" default="true">false</setting>
@@ -95,7 +95,7 @@
     <setting id="video_thumbnail_type">1</setting>
     <setting id="videolibrary_kodi">true</setting>
     <setting id="videolibrary_max_quality" default="true">false</setting>
-    <setting id="videolibrarypath" default="true">special://profile/addon_data/plugin.video.kod/videolibrary/</setting>
+    <setting id="videolibrarypath" default="true">special://profile/addon_data/plugin.video.s4me/videolibrary/</setting>
     <setting id="vidolibrary_delete" default="true"></setting>
     <setting id="vidolibrary_export" default="true"></setting>
     <setting id="vidolibrary_import" default="true"></setting>
