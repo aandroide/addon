@@ -5,7 +5,7 @@
 
 import cloudscraper, json, copy, inspect
 from core import jsontools, support, httptools, scrapertools
-from platformcode import autorenumber
+from platformcode import autorenumber, logger
 
 # support.dbg()
 host = support.config.get_channel_url()
@@ -164,7 +164,7 @@ def peliculas(item):
     payload = json.dumps(item.args)
     records = httptools.downloadpage(host + '/archivio/get-animes', headers=headers, post=payload).json['records']
     # support.dbg()
-
+ 
     for it in records:
         if not it['title']:
             it['title'] = ''
@@ -189,7 +189,7 @@ def peliculas(item):
             itm.fulltitle = itm.show = itm.contentTitle = title
             itm.contentSerieName = ''
             itm.action = 'findvideos'
-            itm.scws_id = it['episodes'][0].get('scws_id', '')
+            # itm.scws_id = it['episodes'][0].get('scws_id', '')
             # itm.video_url = it['episodes'][0].get('link', '')
 
         else:
@@ -197,7 +197,7 @@ def peliculas(item):
             itm.contentTitle = ''
             itm.fulltitle = itm.show = itm.contentSerieName = title
             itm.action = 'episodios'
-            itm.episodes = it['episodes'] if 'episodes' in it else it.get('scws_id', '')
+            #itm.episodes = it['episodes'] if 'episodes' in it else it.get('scws_id', '')
 
         itemlist.append(itm)
 
@@ -211,7 +211,8 @@ def episodios(item):
     support.info()
     itemlist = []
     title = 'Parte' if item.type.lower() == 'movie' else 'Episodio'
-    for it in item.episodes:
+    episodes = json.loads(support.match(item, patron='episodes="([^"]+)"', debug=False).match.replace('&quot;','"'));
+    for it in episodes:
         itemlist.append(
             item.clone(title=support.typo('{}. {} {}'.format(it['number'], title, it['number']), 'bold'),
                        episode = it['number'],
