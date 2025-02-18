@@ -12,6 +12,13 @@ def getmainlist(view="thumb_"):
     logger.debug()
     itemlist = list()
 
+    try:
+        from core.filetools import isdir
+        kodpath = os.path.abspath(os.path.join(config.get_data_path(), "../plugin.video.kod"))
+        if isdir(kodpath):
+            itemlist.append(Item(title="Migrazione KoD -> S4Me", action="migrate"))
+    except:
+        pass
     # Main Menu Channels
     if addon.getSetting('enable_news_menu') == "true":
         itemlist.append(Item(title=config.get_localized_string(30130), channel="news", action="mainlist",
