@@ -72,7 +72,7 @@ def search(item, text):
 
 
 def findvideos(item):
-    url = support.match(item, patron=r'href="(?P<url>\/\?file\/[^"]+)"').match
+    url = support.match(item, patron=r'class="bot1" .*?href="(?P<url>[^"]+)"', debug=False).match
     if not url.startswith('http'):
         url = host + url
     url = support.httptools.downloadpage(url, followredirect=True).url
