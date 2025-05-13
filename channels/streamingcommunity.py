@@ -47,22 +47,22 @@ host = support.config.get_channel_url()
 
 @support.menu
 def mainlist(item):
-    film=['/movies',
-          ('Aggiunti di recente',['/movies','peliculas',1]),
-          ('Top 10 film di oggi',['/movies','peliculas',2])]
-    tvshow=['/tv-shows',
-            ('Aggiunti di recente', ['/tv-shows', 'peliculas', 1]),
-            ('Top 10 serie TV di oggi', ['/tv-shows', 'peliculas', 2])]
+    film=['/it/movies',
+          ('Aggiunti di recente',['/it/movies','peliculas',1]),
+          ('Top 10 film di oggi',['/it/movies','peliculas',2])]
+    tvshow=['/it/tv-shows',
+            ('Aggiunti di recente', ['/it/tv-shows', 'peliculas', 1]),
+            ('Top 10 serie TV di oggi', ['/it/tv-shows', 'peliculas', 2])]
     generi = [('Generi', ['','genres'])]
     menu = [
-        ('Archivio', ['/archive', 'peliculas', -1]),
-	('Archivio Film {submenu}', ['/archive?type=movie', 'peliculas', -1]),
-    ('Archivio Serie TV {submenu}', ['/archive?type=tv', 'peliculas', -1]),
-    ('Archivio per data aggiornamento {submenu}', ['/archive?sort=last_air_date', 'peliculas', -1]),
-	('Archivio per data aggiunta {submenu}', ['/archive?sort=created_at', 'peliculas', -1]),
-	('Archivio per valutazione {submenu}', ['/archive?sort=score', 'peliculas', -1]),
-	('Archivio per numero visioni {submenu}', ['/archive?sort=views', 'peliculas', -1]),
-	('Archivio per nome {submenu}', ['/archive?sort=name', 'peliculas', -1])
+        ('Archivio', ['/it/archive', 'peliculas', -1]),
+	('Archivio Film {submenu}', ['/it/archive?type=movie', 'peliculas', -1]),
+    ('Archivio Serie TV {submenu}', ['/it/archive?type=tv', 'peliculas', -1]),
+    ('Archivio per data aggiornamento {submenu}', ['/it/archive?sort=last_air_date', 'peliculas', -1]),
+	('Archivio per data aggiunta {submenu}', ['/it/archive?sort=created_at', 'peliculas', -1]),
+	('Archivio per valutazione {submenu}', ['/it/archive?sort=score', 'peliculas', -1]),
+	('Archivio per numero visioni {submenu}', ['/it/archive?sort=views', 'peliculas', -1]),
+	('Archivio per nome {submenu}', ['/it/archive?sort=name', 'peliculas', -1])
     ]
     search=''
     return locals()
@@ -195,7 +195,7 @@ def makeItem(n, it, item):
         # itm.contentType = 'movie'
         itm.fulltitle = itm.show = itm.contentTitle = title
         itm.action = 'findvideos'
-        itm.url = host + '/watch/%s' % it['id']
+        itm.url = host + '/it/watch/%s' % it['id']
 
     else:
         # itm.contentType = 'tvshow'
@@ -203,7 +203,7 @@ def makeItem(n, it, item):
         itm.fulltitle = itm.show = itm.contentSerieName = title
         itm.action = 'episodios'
         itm.season_count = it['seasons_count']
-        itm.url = host + '/titles/%s-%s' % (it['id'], it['slug'])
+        itm.url = host + '/it/titles/%s-%s' % (it['id'], it['slug'])
     itm.n = n
     return itm
 
@@ -237,7 +237,7 @@ def episodios(item):
                            action='findvideos',
                            contentType='episode',
                            contentSerieName=item.fulltitle,
-                           url='{}/iframe/{}?episode_id={}'.format(host, se['title_id'], ep['id'])))
+                           url='{}/it/iframe/{}?episode_id={}'.format(host, se['title_id'], ep['id'])))
 
     if config.get_setting('episode_info') and not support.stackCheck(['add_tvshow', 'get_newest']):
         support.tmdb.set_infoLabels_itemlist(itemlist, seekTmdb=True)
