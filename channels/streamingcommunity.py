@@ -213,13 +213,13 @@ def episodios(item):
     logger.debug()
     itemlist = []
 
-    data_page = get_data(item.url)
+    data_page = get_data(item.url)    
     seasons = data_page['props']['title']['seasons']
     # episodes = data_page['props']['loadedSeason']['episodes']
     # support.dbg()
 
     for se in seasons:
-        data_page = get_data(item.url + '/stagione-' + str(se['number']))
+        data_page = get_data(item.url + '/season-' + str(se['number']))
         episodes = data_page['props']['loadedSeason']['episodes']
 
         for ep in episodes:
