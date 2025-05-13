@@ -47,22 +47,22 @@ host = support.config.get_channel_url()
 
 @support.menu
 def mainlist(item):
-    film=['/film',
-          ('Aggiunti di recente',['/film','peliculas',1]),
-          ('Top 10 film di oggi',['/film','peliculas',2])]
-    tvshow=['/serie-tv',
-            ('Aggiunti di recente', ['/serie-tv', 'peliculas', 1]),
-            ('Top 10 serie TV di oggi', ['/serie-tv', 'peliculas', 2])]
+    film=['/movies',
+          ('Aggiunti di recente',['/movies','peliculas',1]),
+          ('Top 10 film di oggi',['/movies','peliculas',2])]
+    tvshow=['/tv-shows',
+            ('Aggiunti di recente', ['/tv-shows', 'peliculas', 1]),
+            ('Top 10 serie TV di oggi', ['/tv-shows', 'peliculas', 2])]
     generi = [('Generi', ['','genres'])]
     menu = [
-        ('Archivio', ['/archivio', 'peliculas', -1]),
-	('Archivio Film {submenu}', ['/archivio?type=movie', 'peliculas', -1]),
-    ('Archivio Serie TV {submenu}', ['/archivio?type=tv', 'peliculas', -1]),
-    ('Archivio per data aggiornamento {submenu}', ['/archivio?sort=last_air_date', 'peliculas', -1]),
-	('Archivio per data aggiunta {submenu}', ['/archivio?sort=created_at', 'peliculas', -1]),
-	('Archivio per valutazione {submenu}', ['/archivio?sort=score', 'peliculas', -1]),
-	('Archivio per numero visioni {submenu}', ['/archivio?sort=views', 'peliculas', -1]),
-	('Archivio per nome {submenu}', ['/archivio?sort=name', 'peliculas', -1])
+        ('Archivio', ['/archive', 'peliculas', -1]),
+	('Archivio Film {submenu}', ['/archive?type=movie', 'peliculas', -1]),
+    ('Archivio Serie TV {submenu}', ['/archive?type=tv', 'peliculas', -1]),
+    ('Archivio per data aggiornamento {submenu}', ['/archive?sort=last_air_date', 'peliculas', -1]),
+	('Archivio per data aggiunta {submenu}', ['/archive?sort=created_at', 'peliculas', -1]),
+	('Archivio per valutazione {submenu}', ['/archive?sort=score', 'peliculas', -1]),
+	('Archivio per numero visioni {submenu}', ['/archive?sort=views', 'peliculas', -1]),
+	('Archivio per nome {submenu}', ['/archive?sort=name', 'peliculas', -1])
     ]
     search=''
     return locals()
@@ -70,7 +70,7 @@ def mainlist(item):
 
 def get_data(url):
     return jsontools.load(
-        support.scrapertools.decodeHtmlentities(support.match(url, patron='data-page="([^"]+)').match))
+        support.scrapertools.decodeHtmlentities(support.match(url, patron='data-page="([^"]+)', debug=False).match))
 
 
 def genres(item):
