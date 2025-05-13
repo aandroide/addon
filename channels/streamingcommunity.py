@@ -88,7 +88,7 @@ def genres(item):
 def search(item, text):
     logger.debug('search', text)
     item.search = True
-    item.url = host + '/search?q=' + text
+    item.url = host + '/it/search?q=' + text
 
     try:
         return peliculas(item)
