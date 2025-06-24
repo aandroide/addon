@@ -79,8 +79,9 @@ def genres(item):
     itemlist = []
     data_page = get_data(item.url)
     args = data_page['props']['genres']
+
     for arg in args:
-        itemlist.append(item.clone(title=support.typo(arg['name'], 'bold'), url=host+'/browse/genre?g='+urllib_parse.quote(arg['name']), action='peliculas', genre=True))
+        itemlist.append(item.clone(title=support.typo(arg['name'], 'bold'), url=host+'/it/archive?genre[]='+str(arg['id']), action='peliculas', genre=True))
     support.thumb(itemlist, genre=True)
     return itemlist
 
