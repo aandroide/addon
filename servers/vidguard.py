@@ -35,7 +35,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         enc_data = enc_data.replace('\\"', '"')
         enc_data = aadecode.decode(enc_data, alt = True)
         stream_url = json.loads(enc_data[11:]).get('stream')
-        video_urls.append(['VidGuard', sig_decode(stream_url)])
+        video_urls.append(['hls', sig_decode(stream_url)])
 
     return video_urls
 
@@ -50,5 +50,4 @@ def sig_decode(url):
             t[i + 1], t[i] = t[i], t[i + 1]
 
         url = url.replace(sig, ''.join(chr(x) for x in t)[:-5])
-        logger.debug(url)
         return url
