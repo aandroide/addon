@@ -167,12 +167,15 @@ def peliculas(item):
  
     for it in records:
         if not it['title']:
-            it['title'] = ''
+            it['title'] = it['title_eng']
+
         lang = support.match(it['title'], patron=r'\(([It][Tt][Aa])\)').match
         title = support.re.sub(r'\s*\([^\)]+\)', '', it['title'])
-
-        if 'ita' in lang.lower(): language = 'ITA'
-        else: language = 'Sub-ITA'
+	
+        if 'ita' in lang.lower(): 
+            language = 'ITA'
+        else:
+            language = 'Sub-ITA'
 
         if title:
             itm = item.clone(title=support.typo(title,'bold') + support.typo(language,'_ [] color std') + (support.typo(it['title_eng'],'_ ()') if it['title_eng'] else ''))
@@ -193,6 +196,7 @@ def peliculas(item):
             # itm.video_url = it['episodes'][0].get('link', '')
 
         else:
+            itm.api_ep_url = '{}/info_api/{}/'.format(item.url, it.get('id'))
             itm.contentType = 'tvshow'
             itm.contentTitle = ''
             itm.fulltitle = itm.show = itm.contentSerieName = title
@@ -211,10 +215,16 @@ def episodios(item):
     support.info()
     itemlist = []
     title = 'Parte' if item.type.lower() == 'movie' else 'Episodio'
-    episodes = json.loads(support.match(item, patron='episodes="([^"]+)"', debug=False).match.replace('&quot;','"'));
-    for it in episodes:
-        itemlist.append(
-            item.clone(title=support.typo('{}. {} {}'.format(it['number'], title, it['number']), 'bold'),
+    start=1
+    limit=120
+ 
+    while True:
+        full = json.loads(httptools.downloadpage('{}1?start_range={}&end_range={}'.format(item.api_ep_url,start, start + (limit -1)), headers=headers).data)
+        count = full['episodes_count']
+        episodes = full['episodes']
+        for it in episodes:
+            itemlist.append(
+                item.clone(title=support.typo('{}. {} {}'.format(it['number'], title, it['number']), 'bold'),
                        episode = it['number'],
                        fulltitle=item.title,
                        show=item.title,
@@ -228,11 +238,16 @@ def episodios(item):
                       )
                     #    video_url=it.get('link', ''))
             )
+        if count > start:
+            start = start + limit
+        else:
+            break
 
     if inspect.stack(0)[1][3] not in ['find_episodes']:
         autorenumber.start(itemlist, item)
     support.videolibrary(itemlist, item)
-    support.download(itemlist, item)
+    #support.download(itemlist, item)
+
     return itemlist
 
 

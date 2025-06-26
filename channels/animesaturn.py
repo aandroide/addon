@@ -45,6 +45,7 @@ def mainlist(item):
              ('Più Votati',['/toplist','menu', 'top']),
              ('In Corso',['/animeincorso','peliculas','incorso']),
              ('Ultimi Episodi',['/fetch_pages.php?request=episodes&d=1','peliculas','updated'])]
+    search = ''
 
     return locals()
 
