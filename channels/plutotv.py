@@ -3,7 +3,7 @@
 # Canale per Pluto TV
 # ------------------------------------------------------------
 
-import uuid, datetime
+import uuid, datetime, six
 from platformcode import logger, config
 from core.item import Item
 from core import jsontools, support, httptools
@@ -26,7 +26,11 @@ def mainlist(item):
 
 @support.menu
 def category(item):
-    menu = sorted([(it['name'], ['/it/on-demand', 'peliculas', it['items']]) for it in httptools.downloadpage(vod_url).json['categories'][1:]])
+    if not six.PY2:
+        menu = [(it['name'], ['/it/on-demand', 'peliculas', it['items']]) for it in httptools.downloadpage(vod_url).json['categories'][1:]]
+        menu.sort(key=lambda item: item[0])
+    else:
+        menu = sorted([(it['name'], ['/it/on-demand', 'peliculas', it['items']]) for it in httptools.downloadpage(vod_url).json['categories'][1:]])
     return locals()
 
 def live(item):
