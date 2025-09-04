@@ -109,10 +109,10 @@ def newest(category):
     item.newest = True
     if category == 'peliculas':
         item.contentType = 'movie'
-        item.url = host + '/film'
+        item.url = host + '/it/movies'
     else:
         item.contentType = 'tvshow'
-        item.url = host + '/serie-tv'
+        item.url = host + '/it/tv-shows'
 
     try:
         itemlist = peliculas(item)
