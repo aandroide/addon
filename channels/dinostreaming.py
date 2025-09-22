@@ -39,9 +39,9 @@ def peliculas(item):
             item.parent_url = item.url
 
         item.nextpage = item.page + 1
-        nextPageUrl = "{}/page/{}".format(item.parent_url, item.nextpage)
+        nextPageUrl = "{}/page/{}".format(host, item.nextpage)
         
-        resp = httptools.downloadpage(nextPageUrl, only_headers = True)
+        resp = httptools.downloadpage(nextPageUrl)
         if (resp.code > 399): # no more elements
             nextPageUrl = ''
 

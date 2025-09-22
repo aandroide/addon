@@ -39,12 +39,13 @@ def get_data(url):
 @support.menu
 def mainlist(item):
 
-    anime = ['/animelist',
+    menu = [ ('Anime', ['/filter?', 'peliculas','filter']),
              ('ITA',['', 'submenu', '/filter?language%5B0%5D=1']),
              ('SUB-ITA',['', 'submenu', '/filter?language%5B0%5D=0']),
              ('Più Votati',['/toplist','menu', 'top']),
              ('In Corso',['/animeincorso','peliculas','incorso']),
              ('Ultimi Episodi',['/fetch_pages.php?request=episodes&d=1','peliculas','updated'])]
+    search = ''
 
     return locals()
 

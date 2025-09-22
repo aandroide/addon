@@ -145,9 +145,25 @@ def newest(categoria):
 def findvideos(item):
     support.info('findvideos', item)
     data = httptools.downloadpage(item.url).data
-    iframe = support.match(data, patron='src="(http[^"]+)" frameborder=\"0\" allow=\"accelerometer; autoplay;').match
+    
+    # Estrazione dell'iframe principale
+    iframe = support.match(data, patron=r'<iframe[^>]+src="([^"]+)"[^>]+id="mirrorFrame"').match
+    
+    # Estrazione alternativa se il primo metodo fallisce
+    if not iframe:
+        iframe = support.match(data, patron=r'<iframe[^>]+src="(https://mostraguarda[^"]+)"').match
+    
     if iframe:
+        # Correzione URL relativi
+        if iframe.startswith('//'):
+            iframe = 'https:' + iframe
+        elif iframe.startswith('/'):
+            parts = item.url.split('/')
+            base_url = parts[0] + '//' + parts[2]
+            iframe = base_url + iframe
+        
         item.url = iframe
+    
     return support.server(item)
     
     # TODO: verificare se si puo' reinsierire il trailer youtube

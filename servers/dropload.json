@@ -3,12 +3,12 @@
   "find_videos": {
     "patterns": [
       {
-        "pattern": "//dropload.io/(?:e/)?(\\w{12})",
-        "url": "https://dropload.io/\\1"
+        "pattern": "//dropload.tv/(?:e/)?(\\w{12})",
+        "url": "https://dropload.tv/\\1"
       },
       {
-        "pattern": "//dropload.io/embed-(\\w{12}).html",
-        "url": "https://dropload.io/\\1"
+        "pattern": "//dropload.tv/embed-(\\w{12}).html",
+        "url": "https://dropload.tv/\\1"
       }
     ]
   },
