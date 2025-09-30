@@ -80,8 +80,8 @@ def search(item, text):
     
 @support.scrape
 def episodios(item):
-    patronBlock = r'<div class="tab-pane fade" id="season-(?P<season>.)"(?P<block>.*?)</ul>\s*</div>'
-    patron = r'(?P<data><a href="#" allowfullscreen data-link="[^"]+.*?title="(?P<title>[^"]+)(?P<lang>[sS][uU][bB]-?[iI][tT][aA])?\s*">(?P<episode>[^<]+).*?</li>)'
+    patronBlock = r'<div class="tab-pane fade" id="season-(?P<season>\d+)"(?P<block>.*?)</ul>\s*</div>'
+    patron = r'<a href="#" allowfullscreen data-link="(?P<url>[^"]+)"[^>]+id="[^"]*"[^>]*data-title="(?P<title>[^"]*)"[^>]*>(?P<episode>\d+)</a>'
     action = 'findvideos'
     return locals()
 
