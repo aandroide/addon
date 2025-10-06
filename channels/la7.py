@@ -48,7 +48,7 @@ def mainlist(item):
 
 def live(item):
     la7live_item = item.clone(title=support.typo('La7', 'bold'), fulltitle='La7', url= host + '/dirette-tv', action='findvideos', forcethumb = True, no_return=True)
-    la7dlive_item = item.clone(title=support.typo('La7d', 'bold'), fulltitle='La7d', url= host + '/live-la7d', action='findvideos', forcethumb = True, no_return=True)
+    la7dlive_item = item.clone(title=support.typo('La7Cinema', 'bold'), fulltitle='La7d', url= host + '/live-la7cinema', action='findvideos', forcethumb = True, no_return=True)
     json_data = json.loads(httptools.downloadpage("https://www.la7.it/sites/default/files/la7_app_home_smarttv.json").data)
     if "fascia_dirette" in json_data:
         if 'la7' in json_data["fascia_dirette"]:
@@ -66,7 +66,7 @@ def live(item):
 
 def replay_channels(item):
     itemlist = [item.clone(title=support.typo('La7', 'bold'), fulltitle='La7', url= host + '/rivedila7/0/la7', action='replay_menu', forcethumb = True),
-                item.clone(title=support.typo('La7d', 'bold'), fulltitle='La7d', url= host + '/rivedila7/0/la7d', action='replay_menu', forcethumb = True)]
+                item.clone(title=support.typo('La7Cinema', 'bold'), fulltitle='La7d', url= host + '/rivedila7/0/la7cinema', action='replay_menu', forcethumb = True)]
     itemlist = support.thumb(itemlist, live=True)
     itemlist.append(item.clone(title=support.typo('TG La7', 'bold'), fulltitle='TG La7',
                                plot='Informazione a cura della redazione del TG LA7', url= host + '/tgla7', action='episodios',
