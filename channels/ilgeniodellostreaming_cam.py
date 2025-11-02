@@ -16,9 +16,9 @@ headers = [['Referer', host]]
 def mainlist(item):
     menu = [('Tutti',['/catalog/all', 'peliculas', 'template-az', 'undefined']),
             ('Generi {submenu}',['', 'genres', 'genres', 'undefined']),
-	    ('Per Lettera {submenu}',['/catalog/all', 'genres', 'template-az', 'undefined']),
-	    ('Anni {submenu}',['', 'genres', 'year', 'undefined']),
-	    ('Serie Tv',['/serie-tv/', 'peliculas', '', 'tvshow']),	    
+            ('Per Lettera {submenu}',['/catalog/all', 'genres', 'template-az', 'undefined']),
+            ('Anni {submenu}',['', 'genres', 'year', 'undefined']),
+            ('Serie Tv',['/serie-tv/', 'peliculas', '', 'tvshow']),
     ]
 
     search = ''
@@ -80,8 +80,8 @@ def search(item, text):
     
 @support.scrape
 def episodios(item):
-    patronBlock = r'<div class="tab-pane fade" id="season-(?P<season>.)"(?P<block>.*?)</ul>\s*</div>'
-    patron = r'(?P<data><a href="#" allowfullscreen data-link="[^"]+.*?title="(?P<title>[^"]+)(?P<lang>[sS][uU][bB]-?[iI][tT][aA])?\s*">(?P<episode>[^<]+).*?</li>)'
+    patronBlock = r'<div class="tab-pane fade" id="season-(?P<season>\d+)"(?P<block>.*?)</ul>\s*</div>'
+    patron = r'(?P<data><a.*?data-num="(?P<season>.*?)x(?P<episode>.*?)".*?data-title="(?P<title>.+?)(?:: (?P<plot>.*?))?">.*?</li>)'
     action = 'findvideos'
     return locals()
 
