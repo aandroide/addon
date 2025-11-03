@@ -19,8 +19,12 @@ TIMEOUT_TOTAL = 60
 
 def mainlist(item):
     logger.debug(" mainlist")
-    itemlist = [
-        Item(title=support.typo('Canali live', 'bold'),
+    itemlist = [#Item(channel="search", action='discover_list', title=config.get_localized_string(70309),
+               #search_type='list', list_type='movie/now_playing',
+               #          thumbnail=get_thumb("now_playing.png")),
+               #Item(channel="search", action='discover_list', title=config.get_localized_string(70312),
+               #          search_type='list', list_type='tv/on_the_air', thumbnail=get_thumb("on_the_air.png")),
+             Item(title=support.typo('Canali live', 'bold'),
              channel=item.channel,
              action='live',
              thumbnail=support.thumb('tvshow_on_the_air')),
@@ -76,12 +80,12 @@ def mainlist(item):
              thumbnail=item.thumbnail),
         Item(channel=item.channel,
              title=config.get_setting("now4", channel="filmontv"),
-             action="now_on_misc_film",
+             action="now_on_misc",
              url="%s/ora-in-onda/sky-cinema/" % host,
              thumbnail=item.thumbnail),
         Item(channel=item.channel,
              title=config.get_setting("now5", channel="filmontv"),
-             action="now_on_misc
+             action="now_on_misc_film",
              url="%s/ora-in-onda/sky-doc-e-lifestyle/" % host,
              thumbnail=item.thumbnail),
         Item(channel=item.channel,
@@ -102,6 +106,7 @@ def mainlist(item):
              thumbnail=item.thumbnail)
     ]
     return itemlist
+    
 
 def server_config(item):
     return platformtools.show_channel_settings(channelpath=filetools.join(config.get_runtime_path(), "specials", item.config))
