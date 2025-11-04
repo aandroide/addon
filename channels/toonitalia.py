@@ -3,7 +3,7 @@
 # Canale per ToonItalia
 # ------------------------------------------------------------
 
-from core import scrapertools, support
+from core import scrapertools, support, httptools
 
 host = support.config.get_channel_url()
 headers = [['Referer', host]]
@@ -41,19 +41,19 @@ def peliculas(item):
     anime = True
     action = 'check'
 
-    deflang = 'ITA' if 'sub' not in item.url else 'Sub-ITA'
+    deflang = 'ITA' if ('sub' not in item.url and 'contatti' not in item.url) else 'Sub-ITA'
     if item.args == 'list':
         pagination = 20
         patron = r'<li><a href="(?P<url>[^"]+)">(?P<title>[^<]+)'
 
     else:
         patronBlock = r'<main[^>]+>(?P<block>.*)</main>'
-        patron = r'class="entry-title[^>]+><a href="(?P<url>[^"]+)">(?P<title>[^<]+)</a>.*?<p>(?P<plot>[^<]+)'
+        patron = r'<div class="entry-categories">(?P<categories>.*?)<!-- \.entry-categories -->.*?class="entry-title[^>]+><a href="(?P<url>[^"]+)">(?P<title>[^<]+)</a>.*?<p>(?P<plot>[^<]+)'
         patronNext = r'<a class="next page-numbers" href="([^"]+)">'
 
     def itemHook(item):
         support.info(item.title)
-        if 'sub/ita' in item.cat.lower():
+        if 'sub-ita' in item.categories.lower():
             item.title = item.title.replace('[ITA]', '[Sub-ITA]')
             item.contentLanguage = 'Sub-ITA'
         return item
@@ -71,6 +71,9 @@ def check(item):
 def episodios(item):
     anime = True
     item.contentType = 'tvshow'
+    html = httptools.downloadpage(item.url, headers=headers, ignore_response_code=True).data
+    start_index = html.find("Trama:")
+    data = html[start_index:].strip() if start_index > -1 else html
     patron = r'>\s*(?:(?P<season>\d+)(?:&#215;|x|×))?(?P<episode>\d+)-*\d*(?:\s+&#8211;\s+)?[ –]+(?P<title>[^<]+)[ –]+<a (?P<data>.*?)(?:<br|</p)'
     
     return locals()
@@ -78,10 +81,3 @@ def episodios(item):
 
 def findvideos(item):
     return support.server(item, data=item.data)
-
-
-def clean_title(title):
-    title = scrapertools.unescape(title)
-    title = title.replace('_',' ').replace('–','-').replace('  ',' ')
-    title = title.strip(' - ')
-    return title
