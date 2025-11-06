@@ -111,6 +111,87 @@ def mainlist(item):
 def server_config(item):
     return platformtools.show_channel_settings(channelpath=filetools.join(config.get_runtime_path(), "specials", item.config))
 
+
+def create_search_item(title, search_text, content_type, thumbnail="", year="", genre="", plot=""):
+    """
+    Crea un item di ricerca che supporta sia la nuova ricerca globale che la vecchia ricerca.
+    Controlla il setting 'new_search' per decidere quale usare.
+    
+    Nuova ricerca globale:
+    - channel='globalsearch'
+    - action='Search'
+    - mode='all'
+    - contentType='movie' o 'tvshow'
+    
+    Vecchia ricerca:
+    - channel='search'
+    - action='new_search'
+    - mode='all'
+    """
+    use_new_search = config.get_setting('new_search')
+    clean_text = search_text.replace("+", " ").strip()
+
+    infoLabels = {
+        'year': year if year else "",
+        'genre': genre if genre else "",
+        'title': clean_text,
+        'plot': plot if plot else ""
+    }
+
+    if content_type == 'tvshow':
+        infoLabels['tvshowtitle'] = clean_text
+
+    if use_new_search:
+        # NUOVA RICERCA GLOBALE
+        new_item = Item(
+            channel='globalsearch',
+            action='Search',
+            text=clean_text,
+            title=title,
+            thumbnail=thumbnail,
+            fanart=thumbnail,
+            mode='movie' if content_type == 'movie' else 'tvshow',     
+            type='movie' if content_type == 'movie' else 'tvshow',                                                  
+            contentType=content_type,
+            infoLabels=infoLabels,
+            folder=False
+        )
+
+        # Imposta contentTitle o contentSerieName
+        if content_type == 'movie':
+            new_item.contentTitle = clean_text
+        elif content_type == 'tvshow':
+            new_item.contentSerieName = clean_text
+
+    else:
+        # VECCHIA RICERCA
+        try:
+            quote_fn = urllib.quote_plus
+        except:
+            from urllib.parse import quote_plus as quote_fn
+
+        extra_type = 'movie' if content_type == 'movie' else 'tvshow'
+
+        new_item = Item(
+            channel='search',
+            action="new_search",
+            extra=quote_fn(clean_text) + '{}' + extra_type,
+            title=title,
+            fulltitle=clean_text,
+            mode='all',
+            search_text=clean_text,
+            url="",
+            thumbnail=thumbnail,
+            contentTitle=clean_text,
+            contentYear=year if year else "",
+            contentType=content_type,
+            infoLabels=infoLabels,
+            folder=True
+        )
+
+    return new_item
+
+
 def now_on_misc_film(item):
     logger.debug("filmontv now_on_misc_film")
     itemlist = []
@@ -128,28 +209,19 @@ def now_on_misc_film(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     
     for scrapedchannel, scrapedtime, scrapedtitle, scrapedthumbnail in matches:
-        scrapedurl = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        infoLabels = {}
-        infoLabels['title'] = "movie"
-        itemlist.append(
-            Item(channel=item.channel,
-                 action="new_search",
-                 extra=urllib.quote_plus(scrapedtitle) + '{}' + 'movie',
-                 title="[B]" + scrapedtitle + "[/B] - " + scrapedchannel + " - " + scrapedtime,
-                 fulltitle=scrapedtitle,
-                 mode='all',
-                 search_text=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail if scrapedthumbnail.startswith('http') else host + scrapedthumbnail,
-                 contentTitle=scrapedtitle,
-                 contentType='movie',
-                 infoLabels=infoLabels,
-                 folder=True))
+        
+        itemlist.append(create_search_item(
+            title="[B]" + scrapedtitle + "[/B] - " + scrapedchannel + " - " + scrapedtime,
+            search_text=scrapedtitle,
+            content_type='movie',
+            thumbnail=scrapedthumbnail if scrapedthumbnail.startswith('http') else host + scrapedthumbnail
+        ))
 
     tmdb.set_infoLabels_itemlist(itemlist, seekTmdb=True)
 
     return itemlist
+
 
 def now_on_misc(item):
     logger.debug("filmontv now_on_misc")
@@ -168,29 +240,19 @@ def now_on_misc(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     
     for scrapedchannel, scrapedtime, scrapedtitle, scrapedthumbnail in matches:
-        scrapedurl = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        infoLabels = {}
-        infoLabels["year"] = ""
-        infoLabels['tvshowtitle'] = scrapedtitle
-        itemlist.append(
-            Item(channel=item.channel,
-                 action="new_search",
-                 extra=urllib.quote_plus(scrapedtitle) + '{}' + 'tvshow',
-                 title="[B]" + scrapedtitle + "[/B] - " + scrapedchannel + " - " + scrapedtime,
-                 fulltitle=scrapedtitle,
-                 mode='all',
-                 search_text=scrapedtitle,
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail if scrapedthumbnail.startswith('http') else host + scrapedthumbnail,
-                 contentTitle=scrapedtitle,
-                 contentType='tvshow',
-                 infoLabels=infoLabels,
-                 folder=True))
+        
+        itemlist.append(create_search_item(
+            title="[B]" + scrapedtitle + "[/B] - " + scrapedchannel + " - " + scrapedtime,
+            search_text=scrapedtitle,
+            content_type='tvshow',
+            thumbnail=scrapedthumbnail if scrapedthumbnail.startswith('http') else host + scrapedthumbnail
+        ))
 
     tmdb.set_infoLabels_itemlist(itemlist, seekTmdb=True)
 
     return itemlist
+
 
 def now_on_tv(item):
     logger.debug("filmontv tvoggi")
@@ -212,28 +274,21 @@ def now_on_tv(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     
     for scrapedchannel, scrapedduration, scrapedtitle, scrapedgender, scrapedthumbnail, scrapedyear in matches:
-        scrapedurl = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        infoLabels = {}
-        infoLabels["year"] = scrapedyear
-        itemlist.append(
-            Item(channel=item.channel,
-                 action="new_search",
-                 extra=urllib.quote_plus(scrapedtitle) + '{}' + 'movie',
-                 title="[B]" + scrapedtitle + "[/B] - " + scrapedchannel + " - " + scrapedduration,
-                 fulltitle="[B]" + scrapedtitle + "[/B] - " + scrapedchannel + " - " + scrapedduration,
-                 url=scrapedurl,
-                 mode='all',
-                 search_text=scrapedtitle,
-                 thumbnail=scrapedthumbnail.replace("?width=240", "?width=480"),
-                 contentTitle=scrapedtitle,
-                 contentType='movie',
-                 infoLabels=infoLabels,
-                 folder=True))
+        
+        itemlist.append(create_search_item(
+            title="[B]" + scrapedtitle + "[/B] - " + scrapedchannel + " - " + scrapedduration,
+            search_text=scrapedtitle,
+            content_type='movie',
+            thumbnail=scrapedthumbnail.replace("?width=240", "?width=480"),
+            year=scrapedyear,
+            genre=scrapedgender
+        ))
 
     tmdb.set_infoLabels_itemlist(itemlist, seekTmdb=True)
 
     return itemlist
+
 
 def primafila(item):
     logger.debug("filmontv tvoggi")
@@ -241,37 +296,41 @@ def primafila(item):
 
     # Carica la pagina
     data = httptools.downloadpage(item.url).data
-    #patron = r'spanTitleMovie">([A-Za-z À-ÖØ-öø-ÿ]*)[a-z \n<>\/="_\-:0-9;A-Z.]*GenresMovie">([A-Za-z À-ÖØ-öø-ÿ\/]*)[a-z \n<>\/="_\-:0-9;A-Z.%]*src="([a-zA-Z:\/\.0-9?=]*)'
     patron = r'spanTitleMovie">([A-Za-z À-ÖØ-öø-ÿ\-\']*)[a-z \n<>\/="_\-:0-9;A-Z.]*GenresMovie">([\-\'A-Za-z À-ÖØ-öø-ÿ\/]*)[a-z \n<>\/="_\-:0-9;A-Z.%]*src="([a-zA-Z:\/\.0-9?]*)[a-z \n<>\/="_\-:0-9;A-Z.%\-\']*Year">([A-Z 0-9a-z]*)'
     matches = re.compile(patron, re.DOTALL).findall(data)
+    
     for scrapedtitle, scrapedgender, scrapedthumbnail, scrapedyear in matches:
-    # for scrapedthumbnail, scrapedtitle, scrapedtv in matches:
-        scrapedurl = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        infoLabels = {}
-        infoLabels["year"] = scrapedyear
-        itemlist.append(
-            Item(channel=item.channel,
-                 action="new_search",
-                 extra=urllib.quote_plus(scrapedtitle) + '{}' + 'movie',
-                 title=scrapedtitle,
-                 fulltitle=scrapedtitle,
-                 url=scrapedurl,
-                 mode='all',
-                 search_text=scrapedtitle,
-                 thumbnail=scrapedthumbnail.replace("?width=240", "?width=480"),
-                 contentTitle=scrapedtitle,
-                 contentType='movie',
-                 infoLabels=infoLabels,
-                 folder=True))
+        
+        itemlist.append(create_search_item(
+            title=scrapedtitle,
+            search_text=scrapedtitle,
+            content_type='movie',
+            thumbnail=scrapedthumbnail.replace("?width=240", "?width=480"),
+            year=scrapedyear,
+            genre=scrapedgender
+        ))
 
     tmdb.set_infoLabels_itemlist(itemlist, seekTmdb=True)
 
     return itemlist
 
+
+def Search(item):
+    """
+    Nuova ricerca globale - chiamata quando use_new_search=True
+    Funzione con S maiuscola come in globalsearch.py
+    """
+    from specials import globalsearch
+    return globalsearch.Search(item)
+
+
 def new_search(item):
-    from specials import search
-    return search.new_search(item)
+    """
+    Vecchia ricerca - chiamata quando use_new_search=False
+    """
+    from specials import search as search_module
+    return search_module.new_search(item)
 
 
 def live(item):
