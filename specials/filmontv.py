@@ -213,7 +213,7 @@ def get_films_database():
 def now_on_misc(item):
     itemlist = []
     items_for_tmdb = []
-    tmdb_blacklist = ['Notizie', 'Sport', 'Rubrica', 'Mondo e Tendenze', 'Musica']
+    tmdb_blacklist = ['Notizie', 'Sport', 'Rubrica', 'Musica']
 
     films_db = get_films_database()
     
