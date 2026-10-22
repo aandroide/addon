@@ -6,6 +6,7 @@
 # ----------------------------------------------------------------------------
 
 import os
+import re
 import sys
 import time
 import hashlib
@@ -83,6 +84,7 @@ HTTP_CONNECT_TIMEOUT = 5
 HTTP_READ_TIMEOUT = 130
 
 # Header Netscape cookie file
+NO_CHALLENGE_MARKER = "# S4Me: nessuna challenge"
 NETSCAPE_HEADER = "# Netscape HTTP Cookie File\n# https://curl.haxx.se/rfc/cookie_spec.html\n# This is a generated file! Do not edit.\n"
 
 # ============================================================================
@@ -170,15 +172,31 @@ def is_enabled():
     return config.get_setting("s4me_enabled", default=False)
 
 
+def _parse_address():
+    """Legge l'impostazione 'IP:porta'. La porta e facoltativa (predefinita 8787)."""
+    value = str(config.get_setting("s4me_remote_ip", default="127.0.0.1:%d" % DEFAULT_PORT) or "").strip()
+    for prefix in ("http://", "https://"):
+        if value.lower().startswith(prefix):
+            value = value[len(prefix):]
+    value = value.split("/")[0]
+    host, port = value, DEFAULT_PORT
+    if ":" in value:
+        host, _, p = value.rpartition(":")
+        try:
+            port = int(p)
+        except ValueError:
+            host, port = value, DEFAULT_PORT
+    return host.strip(), port
+
+
 def get_remote_ip():
     """Restituisce l'IP del server S4Me Assistant."""
-    return config.get_setting("s4me_remote_ip", default="127.0.0.1")
+    return _parse_address()[0]
 
 
 def get_remote_port():
     """Restituisce la porta del server."""
-    port = config.get_setting("s4me_remote_port", default=DEFAULT_PORT)
-    return int(port) if port else DEFAULT_PORT
+    return _parse_address()[1]
 
 
 def is_local():
@@ -236,10 +254,10 @@ def get_cookie_filename(domain):
 # VERIFICA VALIDITA COOKIE
 # ============================================================================
 
-# Durata massima dei cookie CF in secondi (30 minuti)
-# Cloudflare imposta cf_clearance con durata tra 15min e 2h, 
-# ma 30min e un valore sicuro per la maggior parte dei siti
-CF_COOKIE_MAX_AGE = 1800
+# Durata massima di sicurezza dei cookie CF in secondi (24 ore).
+# I cookie si riusano finche Cloudflare non risponde con una challenge: in quel caso
+# handle_protection_retry li invalida e li rifa. Se il cookie riporta una scadenza, vale quella.
+CF_COOKIE_MAX_AGE = 86400
 
 
 def cookies_valid(domain):
@@ -274,10 +292,21 @@ def cookies_valid(domain):
             with open(cookie_file, "r") as f:
                 for line in f:
                     line = line.strip()
+                    if line == NO_CHALLENGE_MARKER:
+                        # FlareSolverr ha caricato la pagina senza challenge: non c'e cf_clearance da attendere
+                        return True
                     if not line or line.startswith("#"):
                         continue
                     parts = line.split("\t")
                     if len(parts) >= 7 and parts[5] == "cf_clearance":
+                        try:
+                            expires = int(parts[4])
+                        except ValueError:
+                            expires = 0
+                        if expires and expires < time.time():
+                            logger.info("S4Me: cf_clearance di %s scaduto" % check_domain)
+                            _invalidate_domain_cookies(check_domain)
+                            break
                         remaining = CF_COOKIE_MAX_AGE - file_age
                         logger.debug("S4Me: cf_clearance valido per %s (resta ~%.0f min)" 
                                      % (check_domain, remaining / 60))
@@ -333,6 +362,17 @@ def _save_user_agent(domain, user_agent):
             f.write(user_agent)
     except Exception:
         pass
+
+
+def has_resolved_cookies(domain):
+    """True se per il dominio (o il suo fallback) esiste un file cookie salvato da app o FlareSolverr."""
+    try:
+        for d in {domain, get_effective_domain(domain)}:
+            if os.path.isfile(get_cookie_filename(d)):
+                return True
+    except Exception:
+        pass
+    return False
 
 
 def get_domain_user_agent(domain):
@@ -406,7 +446,15 @@ def load_domain_cookies(domain, force=False):
             raw = f.read()
         logger.info("S4Me: === FILE COOKIE %s ===" % domain)
         logger.info("S4Me: path=%s" % cookie_file)
-        logger.info("S4Me: contenuto=%s" % raw[:500])
+        # nel log non si scrivono i valori dei cookie (sono legati all'IP e non vanno condivisi)
+        masked = []
+        for _l in raw.split("\n"):
+            _p = _l.split("\t")
+            if len(_p) >= 7 and not _l.startswith("#"):
+                _p[6] = "<%d caratteri>" % len(_p[6])
+                _l = "\t".join(_p)
+            masked.append(_l)
+        logger.info("S4Me: contenuto=%s" % "\n".join(masked)[:500])
         
         count = 0
         lines = raw.strip().split("\n")
@@ -431,7 +479,7 @@ def load_domain_cookies(domain, force=False):
             c_name = parts[5]
             c_value = parts[6] if len(parts) > 6 else ""
             
-            logger.info("S4Me: cookie: name=%s domain=%s value=%s..." % (c_name, c_domain, c_value[:30]))
+            logger.info("S4Me: cookie: name=%s domain=%s valore=%d caratteri" % (c_name, c_domain, len(c_value)))
             
             ck = cookielib.Cookie(
                 version=0,
@@ -537,6 +585,7 @@ CF_CHALLENGE_PATTERNS = [
     "Checking your browser",
     "Verifica del browser in corso",
     "Attendere prego",
+    "Ci siamo quasi",
 ]
 
 
@@ -583,98 +632,372 @@ def is_protection_detected(response):
 # RISOLUZIONE DOMINIO (comunicazione con l'app)
 # ============================================================================
 
-def resolve_domain(domain):
-    """Contatta l'app S4Me Assistant per risolvere la challenge di un dominio.
-    Funzione bloccante che invia POST /resolve e attende la risposta.
-    
-    Args:
-        domain: il dominio da risolvere (es. "hd4me.net")
-    
-    Returns:
-        True se la risoluzione ha avuto successo, False altrimenti
-    """
-    from lib import requests
-    import json
+# ============================================================================
+# RISOLUZIONE CHALLENGE: S4Me Assistant (app sul telefono), FlareSolverr o entrambi
+# ============================================================================
 
-    base_url = get_base_url()
-    if not base_url:
-        logger.error("S4Me: URL base non configurato")
+CF_NAME = "cf_clearance"
+
+# Una sola challenge alla volta sull'app (la WebView e una sola)
+_app_lock = threading.Lock()
+_flare_lock = threading.Lock()
+_flare_manager = None
+_flare_manager_url = None
+_flare_notified = False
+_flare_request_lock = threading.Lock()
+_flare_challenge_notified = False
+
+
+def get_cf_method():
+    """Metodo scelto nelle impostazioni: 'app', 'flaresolverr' oppure 'auto'."""
+    value = config.get_setting("s4me_cf_method", default="S4Me Assistant")
+    if value in ("FlareSolverr", 1, "1"):
+        return "flaresolverr"
+    if value in ("Automatico", 2, "2"):
+        return "auto"
+    return "app"
+
+
+def get_flaresolverr_url():
+    """Indirizzo del server FlareSolverr, sempre terminato con /v1."""
+    url = config.get_setting("s4me_flaresolverr_url", default="http://127.0.0.1:8191/v1")
+    url = str(url or "").strip() or "http://127.0.0.1:8191/v1"
+    if not url.endswith("/v1"):
+        url = url.rstrip("/") + "/v1"
+    return url
+
+
+def _b64q(text):
+    """Base64 con caratteri sicuri per la query string."""
+    import base64
+    try:
+        from urllib.parse import quote
+    except ImportError:
+        from urllib import quote
+    return quote(base64.b64encode(text.encode("utf-8")).decode("ascii"), safe="")
+
+
+def _http_get(url, timeout):
+    try:
+        from urllib.request import urlopen, Request
+    except ImportError:
+        from urllib2 import urlopen, Request
+    data = urlopen(Request(url, headers={"Connection": "close"}), timeout=timeout).read()
+    return data.decode("utf-8", "replace")
+
+
+def _bare(domain):
+    return domain[4:] if domain.startswith("www.") else domain
+
+
+def _final_domain(requested, final_url):
+    """Dominio effettivo dopo i redirect (es. 1337x.to -> altro dominio), altrimenti quello richiesto."""
+    try:
+        host = urlparse.urlparse(final_url).netloc.split(":")[0]
+    except Exception:
+        return requested
+    if not host or _bare(host) == _bare(requested):
+        return requested
+    return host
+
+
+def _cookies_to_netscape(domain, cookies):
+    """
+    Converte una lista di cookie (dict con name, value e, se noti, domain, path, secure, expires)
+    nel formato Netscape che il resto del modulo sa gia leggere.
+    """
+    now = int(time.time())
+    lines = [NETSCAPE_HEADER.rstrip("\n")]
+    for c in cookies:
+        name = c.get("name")
+        if not name:
+            continue
+        c_domain = c.get("domain") or ("." + _bare(domain))
+        flag = "TRUE" if c_domain.startswith(".") else "FALSE"
+        path = c.get("path") or "/"
+        secure = "TRUE" if c.get("secure", True) else "FALSE"
+        try:
+            expires = int(float(c.get("expires", 0)))
+        except (TypeError, ValueError):
+            expires = 0
+        if expires <= now:
+            expires = now + 86400
+        lines.append("\t".join([c_domain, flag, path, secure, str(expires), str(name), str(c.get("value", ""))]))
+    return "\n".join(lines) + "\n"
+
+
+# Istante (secondi) in cui sono stati salvati gli ultimi cookie di ogni dominio
+_resolved_at = {}
+
+
+def _cookies_saved_at(domain):
+    """Quando sono stati salvati i cookie del dominio (o del suo fallback). 0 se non ci sono."""
+    best = 0
+    for d in {domain, get_effective_domain(domain)}:
+        if d in _resolved_at:
+            best = max(best, _resolved_at[d])
+            continue
+        try:
+            best = max(best, os.path.getmtime(get_cookie_filename(d)))
+        except Exception:
+            pass
+    return best
+
+
+def _apply_resolution(domain, resolved_domain, cookies_txt, user_agent):
+    """Salva cookie e user agent e li carica nel jar, anche per il dominio originale se e cambiato."""
+    now = time.time()
+    _resolved_at[resolved_domain] = now
+    _resolved_at[domain] = now
+    _save_cookies_txt(resolved_domain, cookies_txt)
+    if user_agent:
+        _save_user_agent(resolved_domain, user_agent)
+    load_domain_cookies(resolved_domain, force=True)
+    if resolved_domain != domain:
+        _set_fallback(domain, resolved_domain)
+        _save_cookies_txt(domain, cookies_txt)
+        if user_agent:
+            _save_user_agent(domain, user_agent)
+        load_domain_cookies(domain, force=True)
+    return True
+
+
+# ---------------------------------------------------------------- provider 1: app
+
+def _resolve_with_app(domain):
+    """Apre la pagina nella WebView dell'app (telefono o stesso dispositivo) e raccoglie i cookie."""
+    import json
+    with _app_lock:
+        if not _ensure_server_running():
+            logger.error("S4Me: app non raggiungibile, impossibile risolvere %s" % domain)
+            return False
+        target = "https://%s" % domain
+        query = "url=%s&time=%d&returnWhenCookieNameFound=%s" % (
+            _b64q(target), DEFAULT_RESOLVE_TIMEOUT, _b64q(target + "|" + CF_NAME))
+        url = get_base_url() + "/getSourceByPageFinished?" + query
+        for attempt in range(1, MAX_RESOLVE_RETRIES + 1):
+            try:
+                logger.info("S4Me: app, risoluzione %s (tentativo %d/%d)" % (domain, attempt, MAX_RESOLVE_RETRIES))
+                data = json.loads(_http_get(url, HTTP_READ_TIMEOUT))
+            except Exception as e:
+                logger.error("S4Me: app, errore per %s: %s" % (domain, e))
+                if attempt == MAX_RESOLVE_RETRIES:
+                    _notify_app_not_running()
+                else:
+                    time.sleep(2)
+                continue
+            if data.get("error"):
+                logger.error("S4Me: app, errore: %s" % data["error"])
+                return False
+            cookies = [c for c in data.get("cookies", []) if c.get("name")]
+            if not any(c["name"] == CF_NAME for c in cookies):
+                logger.error("S4Me: app, challenge non risolta per %s (titolo: %s)" % (domain, data.get("title", "")))
+                return False
+            resolved = _final_domain(domain, data.get("url", ""))
+            logger.info("S4Me: app, %s risolto" % resolved)
+            return _apply_resolution(domain, resolved, _cookies_to_netscape(resolved, cookies),
+                                     data.get("userAgent", ""))
         return False
 
-    resolve_url = base_url + "/resolve"
-    target_url = "https://%s" % domain
 
-    payload = {
-        "url": target_url,
-        "timeout": DEFAULT_RESOLVE_TIMEOUT
-    }
+# ---------------------------------------------------------------- provider 2: FlareSolverr
 
-    for attempt in range(1, MAX_RESOLVE_RETRIES + 1):
-        try:
-            logger.info("S4Me: risoluzione %s (tentativo %d/%d)" 
-                        % (domain, attempt, MAX_RESOLVE_RETRIES))
+def _get_flaresolverr(reset=False):
+    """Manager FlareSolverr condiviso: la sessione viene creata una volta e riusata."""
+    global _flare_manager, _flare_manager_url
+    url = get_flaresolverr_url()
+    with _flare_lock:
+        if reset or _flare_manager is None or _flare_manager_url != url:
+            from core.flaresolverr import FlareSolverrManager
+            manager = FlareSolverrManager(flaresolverr_url=url)
+            if not manager.flaresolverr_session:
+                _flare_manager = None
+                return None
+            _flare_manager = manager
+            _flare_manager_url = url
+        return _flare_manager
 
-            resp = requests.post(
-                resolve_url,
-                json=payload,
-                timeout=(HTTP_CONNECT_TIMEOUT, HTTP_READ_TIMEOUT)
-            )
 
-            if resp.status_code != 200:
-                logger.error("S4Me: risposta HTTP %d dal server" % resp.status_code)
+def _notify_flaresolverr_unreachable():
+    global _flare_notified
+    if _flare_notified:
+        return
+    _flare_notified = True
+    try:
+        import xbmcgui
+        xbmcgui.Dialog().notification(
+            "FlareSolverr",
+            "Server non raggiungibile (%s)" % get_flaresolverr_url(),
+            xbmcgui.NOTIFICATION_WARNING, 8000)
+    except Exception:
+        pass
+
+
+def _notify_flaresolverr_challenge():
+    """Avvisa (una volta) che FlareSolverr non supera la challenge e suggerisce la lingua del browser."""
+    global _flare_challenge_notified
+    if _flare_challenge_notified:
+        return
+    _flare_challenge_notified = True
+    try:
+        import xbmcgui
+        xbmcgui.Dialog().notification(
+            "FlareSolverr",
+            "Challenge non superata. Avvia FlareSolverr con LANG=en-US, disattiva VPN o DNS alternativi, oppure usa l'app S4Me Assistant",
+            xbmcgui.NOTIFICATION_WARNING, 10000)
+    except Exception:
+        pass
+
+
+def _flare_cookies_for(domain):
+    """Cookie gia salvati per il dominio, nel formato richiesto da FlareSolverr (nome, valore, dominio, percorso)."""
+    out = []
+    try:
+        cookie_file = get_cookie_filename(domain)
+        if not os.path.isfile(cookie_file):
+            return out
+        with open(cookie_file, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                parts = line.split("\t")
+                if len(parts) >= 7:
+                    out.append({"name": parts[5], "value": parts[6],
+                                "domain": parts[0].lstrip("."), "path": parts[2] or "/"})
+    except Exception:
+        return []
+    return out
+
+
+# attese (secondi) tra una richiesta e la successiva mentre FlareSolverr finisce la challenge
+FLARE_POLL_WAITS = (1, 1, 1.5, 1.5, 2, 2, 2, 2, 2, 2)
+
+
+def _resolve_with_flaresolverr(domain):
+    """Chiede a FlareSolverr di superare la challenge e raccoglie cookie e user agent."""
+    global _flare_notified
+    target = "https://%s" % domain
+    t_start = time.time()
+    logger.info("S4Me: FlareSolverr, avvio risoluzione di %s" % domain)
+    for attempt in (1, 2):
+        # una sola richiesta alla volta: la sessione FlareSolverr e condivisa tra i thread
+        with _flare_request_lock:
+            manager = _get_flaresolverr(reset=(attempt == 2))
+            if not manager:
                 continue
+            try:
+                logger.info("S4Me: FlareSolverr, risoluzione %s (tentativo %d/2, %.1f s dall'avvio)"
+                            % (domain, attempt, time.time() - t_start))
+                t_req = time.time()
+                saved = _flare_cookies_for(domain) if attempt == 1 else []
+                try:
+                    resp = manager.request(target, tries=1, cookies=saved or None)
+                except Exception:
+                    if not saved:
+                        raise
+                    # cookie rifiutati (es. dominio non valido): si riprova senza
+                    logger.info("S4Me: FlareSolverr, cookie salvati rifiutati, riprovo senza")
+                    resp = manager.request(target, tries=1)
+                data = resp.json() if resp else {}
+                # Con Windows in italiano Cloudflare titola la challenge "Ci siamo quasi..." e FlareSolverr,
+                # che cerca il titolo inglese, la scambia per una pagina normale e risponde subito.
+                # Si ripete la richiesta nella stessa sessione dando tempo al browser di finire.
+                for poll, wait in enumerate(FLARE_POLL_WAITS, 1):
+                    sol = data.get("solution") or {}
+                    if data.get("status") != "ok" or sol.get("status") != 200:
+                        break
+                    if any(c.get("name") == CF_NAME for c in (sol.get("cookies") or [])):
+                        break
+                    if not is_protection_detected(sol.get("response") or ""):
+                        break
+                    logger.info("S4Me: FlareSolverr, %s ancora in challenge, attendo %.1f s e ripeto (%d/%d)"
+                                % (domain, wait, poll, len(FLARE_POLL_WAITS)))
+                    time.sleep(wait)
+                    resp = manager.request(target, tries=1)
+                    data = resp.json() if resp else {}
+            except Exception as e:
+                logger.error("S4Me: FlareSolverr, errore per %s: %s" % (domain, e))
+                if time.time() - t_req > 50:
+                    # FlareSolverr ha provato per tutto il tempo massimo senza superare la challenge:
+                    # una nuova sessione non cambia nulla, si evita di aspettare un altro minuto
+                    logger.error("S4Me: FlareSolverr, challenge di %s non risolta entro il tempo massimo" % domain)
+                    _notify_flaresolverr_challenge()
+                    return False
+                continue
+        solution = data.get("solution") or {}
+        status = solution.get("status")
+        if data.get("status") != "ok" or status != 200:
+            logger.error("S4Me: FlareSolverr, risposta non valida per %s: stato=%s http=%s messaggio=%s"
+                         % (domain, data.get("status"), status, data.get("message", "")))
+            if time.time() - t_req > 50:
+                # FlareSolverr ha usato tutto il tempo massimo senza risolvere: un'altra sessione non serve
+                _notify_flaresolverr_challenge()
+                return False
+            continue
+        page = solution.get("response") or ""
+        cookies = [c for c in (solution.get("cookies") or []) if c.get("name")]
+        has_clearance = any(c["name"] == CF_NAME for c in cookies)
+        if not has_clearance and is_protection_detected(page):
+            # Nessun cf_clearance e la pagina sembra una challenge o un blocco: FlareSolverr non l'ha riconosciuta
+            m = re.search(r"<title[^>]*>(.*?)</title>", page, re.I | re.S)
+            logger.error("S4Me: FlareSolverr, %s senza %s e con pagina di challenge o blocco. Titolo: %s | Inizio pagina: %s"
+                         % (domain, CF_NAME, (m.group(1).strip() if m else "-"),
+                            re.sub(r"\s+", " ", page[:300])))
+            # Dopo tutte le attese la challenge non si e risolta: un'altra sessione non cambia nulla,
+            # si smette subito invece di ripetere tutto
+            _notify_flaresolverr_challenge()
+            return False
+        if not solution.get("userAgent"):
+            logger.error("S4Me: FlareSolverr, nessun userAgent per %s" % domain)
+        _flare_notified = False
+        resolved = _final_domain(domain, solution.get("url", ""))
+        cookies_txt = _cookies_to_netscape(resolved, cookies)
+        if not any(c["name"] == CF_NAME for c in cookies):
+            # Challenge non scattata per il browser di FlareSolverr: la pagina e valida, si salvano
+            # comunque cookie e user agent e si segna il dominio come risolto
+            logger.info("S4Me: FlareSolverr, %s senza challenge (cookie ricevuti: %s), salvo user agent e cookie"
+                        % (domain, ",".join(c["name"] for c in cookies)))
+            cookies_txt = cookies_txt.replace(NETSCAPE_HEADER.rstrip("\n"),
+                                              NETSCAPE_HEADER.rstrip("\n") + "\n" + NO_CHALLENGE_MARKER, 1)
+        else:
+            logger.info("S4Me: FlareSolverr, %s risolto in %.1f s" % (resolved, time.time() - t_start))
+        return _apply_resolution(domain, resolved, cookies_txt, solution.get("userAgent", ""))
+    _notify_flaresolverr_unreachable()
+    return False
 
-            data = resp.json()
 
-            if data.get("success"):
-                cookies_txt = data.get("cookies_txt", "")
-                user_agent = data.get("user_agent", "")
-                # L'app puo rispondere con un dominio diverso (fallback .to -> .cc)
-                resolved_domain = data.get("domain", domain)
-                
-                if cookies_txt:
-                    # Salva i cookie per il dominio effettivo (puo essere diverso)
-                    _save_cookies_txt(resolved_domain, cookies_txt)
-                    if user_agent:
-                        _save_user_agent(resolved_domain, user_agent)
-                    load_domain_cookies(resolved_domain, force=True)
-                    
-                    # Se il dominio e diverso (fallback), salva il mapping
-                    # e carica i cookie anche per il dominio originale
-                    if resolved_domain != domain:
-                        logger.info("S4Me: fallback %s -> %s" % (domain, resolved_domain))
-                        _set_fallback(domain, resolved_domain)
-                        # Copia cookies e UA anche per il dominio originale
-                        _save_cookies_txt(domain, cookies_txt)
-                        if user_agent:
-                            _save_user_agent(domain, user_agent)
-                        load_domain_cookies(domain, force=True)
-                    
-                    logger.info("S4Me: dominio %s risolto con successo (UA: %s)" % (resolved_domain, user_agent[:50] if user_agent else "N/D"))
-                    return True
-                else:
-                    logger.error("S4Me: risposta OK ma cookies_txt vuoto per %s" % domain)
-            else:
-                error = data.get("error", "errore sconosciuto")
-                logger.error("S4Me: risoluzione fallita per %s: %s" % (domain, error))
+# ---------------------------------------------------------------- dispatcher
 
-        except requests.exceptions.ConnectTimeout:
-            logger.error("S4Me: timeout connessione al server (tentativo %d)" % attempt)
-            if attempt == MAX_RESOLVE_RETRIES:
-                _notify_app_not_running()
-        except requests.exceptions.ReadTimeout:
-            logger.error("S4Me: timeout lettura risposta (tentativo %d)" % attempt)
-        except requests.exceptions.ConnectionError:
-            logger.error("S4Me: impossibile connettersi al server (tentativo %d)" % attempt)
-            if attempt == MAX_RESOLVE_RETRIES:
-                _notify_app_not_running()
-        except Exception as e:
-            logger.error("S4Me: errore imprevisto (tentativo %d): %s" % (attempt, str(e)))
-
-        if attempt < MAX_RESOLVE_RETRIES:
-            time.sleep(2)  # Pausa tra i tentativi
-
-    logger.error("S4Me: tutti i tentativi esauriti per %s" % domain)
+def resolve_domain(domain):
+    """
+    Risolve la challenge di un dominio con il metodo scelto nelle impostazioni.
+    Con 'Automatico' prova prima l'app (se raggiungibile) e poi FlareSolverr.
+    Ritorna True se cookie e user agent sono stati salvati e caricati.
+    """
+    method = get_cf_method()
+    if method == "flaresolverr":
+        order = [_resolve_with_flaresolverr]
+    elif method == "auto":
+        if is_local() and not _is_android():
+            # App su questo stesso dispositivo ma non siamo su Android: l'app non puo esserci,
+            # si evita il ping che su Windows impiega circa 2 secondi a fallire
+            alive = False
+        else:
+            alive, _ = _raw_test_connection()
+        if alive or (_is_android() and is_local()):
+            order = [_resolve_with_app, _resolve_with_flaresolverr]
+        else:
+            order = [_resolve_with_flaresolverr]
+    else:
+        order = [_resolve_with_app]
+    for provider in order:
+        try:
+            if provider(domain):
+                return True
+        except Exception:
+            import traceback
+            logger.error(traceback.format_exc())
     return False
 
 
@@ -756,8 +1079,13 @@ def fetch_page(url, headers=None):
 # ENSURE DOMAIN READY (funzione principale per la pre-risoluzione)
 # ============================================================================
 
-def ensure_domain_ready(domain):
-    """Assicura che un dominio abbia cookie validi prima di procedere."""
+def ensure_domain_ready(domain, stale_before=0):
+    """
+    Assicura che un dominio abbia cookie validi prima di procedere.
+    stale_before: istante in cui e partita la richiesta che e stata bloccata. I cookie salvati
+    prima di quell'istante non funzionano piu e vengono rifatti; quelli salvati dopo li ha
+    appena creati un altro thread e si riusano senza rilanciare la challenge.
+    """
     if not is_enabled():
         return True
 
@@ -767,6 +1095,16 @@ def ensure_domain_ready(domain):
     lock = _get_domain_lock(domain)
     lock.acquire()
     try:
+        # Cookie piu vecchi della richiesta bloccata: non funzionano piu, si rifa la challenge
+        if stale_before and (cookies_valid(domain) or (effective != domain and cookies_valid(effective))):
+            if _cookies_saved_at(domain) < stale_before:
+                logger.info("S4Me: cookie di %s piu vecchi della richiesta bloccata, forzo nuova risoluzione" % domain)
+                _invalidate_domain_cookies(domain)
+                if effective != domain:
+                    _invalidate_domain_cookies(effective)
+            else:
+                logger.info("S4Me: cookie di %s appena creati da un altro thread, li riuso" % domain)
+
         # Primo check: cookie gia validi per il dominio o il suo fallback?
         if cookies_valid(domain):
             logger.debug("S4Me: cookie gia validi per %s" % domain)
@@ -777,12 +1115,7 @@ def ensure_domain_ready(domain):
             load_domain_cookies(effective, force=True)
             return True
 
-        # Verifica se il server e attivo
-        if not _ensure_server_running():
-            logger.error("S4Me: server non raggiungibile, impossibile risolvere %s" % domain)
-            return False
-
-        # Tenta la risoluzione
+        # Tenta la risoluzione (app, FlareSolverr o entrambi, secondo le impostazioni)
         result = resolve_domain(domain)
         return result
 
@@ -1078,8 +1411,8 @@ def handle_protection_retry(url, response_code, response_obj, opt):
     if opt.get('_s4me_retry'):
         return False
 
-    # Solo su codici di protezione
-    if response_code not in [403, 429, 503]:
+    # Codici di protezione, oppure 200 con pagina di challenge (succede con la challenge localizzata)
+    if response_code not in [200, 403, 429, 503]:
         return False
 
     # Analizza la risposta per confermare che e una challenge CF
@@ -1095,15 +1428,13 @@ def handle_protection_retry(url, response_code, response_obj, opt):
     except:
         return False
 
-    # Se i cookie esistono ma CF risponde ancora 403, sono invalidi lato CF
-    # Invalida e forza nuova risoluzione
-    if cookies_valid(domain):
-        logger.info("S4Me: cookie presenti per %s ma CF risponde %d - cookie invalidati, forzo nuova risoluzione" % (domain, response_code))
-        _invalidate_domain_cookies(domain)
+    # Se i cookie esistono ma CF risponde ancora 403, sono invalidi lato CF: ensure_domain_ready li
+    # invalida solo se piu vecchi della richiesta bloccata (altrimenti li ha appena creati un altro thread)
+    t0 = opt.get('_s4me_t0') or time.time()
 
     # Tenta la risoluzione
     logger.info("S4Me: protezione rilevata per %s, tentativo risoluzione al volo" % domain)
-    success = ensure_domain_ready(domain)
+    success = ensure_domain_ready(domain, stale_before=t0)
 
     if success:
         # Segna il retry per evitare loop
@@ -1118,44 +1449,47 @@ def handle_protection_retry(url, response_code, response_obj, opt):
 # ============================================================================
 
 def _raw_test_connection():
-    """Test connessione puro - senza avvio automatico del server.
-    Usa una session nuova per evitare problemi di pool/keep-alive.
-    """
-    from lib import requests
-
+    """Test connessione all'app (GET /ping), senza avvio automatico."""
+    import json
     base_url = get_base_url()
     if not base_url:
         return False, "URL non configurato"
-
-    status_url = base_url + "/status"
-
     try:
-        # Session nuova per evitare problemi di connection pooling
-        session = requests.Session()
-        session.headers.update({"Connection": "close"})
-        resp = session.get(
-            status_url,
-            timeout=(HTTP_CONNECT_TIMEOUT, 10)
-        )
-        session.close()
-        if resp.status_code == 200:
-            data = resp.json()
-            return True, "Connesso! Attivo da %s" % data.get("uptime", "N/D")
-        else:
-            return False, "HTTP %d" % resp.status_code
+        data = json.loads(_http_get(base_url + "/ping", HTTP_CONNECT_TIMEOUT))
+        return True, "Connesso! App %s, WebView %s" % (
+            data.get("assistantVersion", "?"), data.get("wvbVersion", "?"))
     except Exception as e:
         return False, str(e)
 
 
+def _test_flaresolverr():
+    """Test connessione a FlareSolverr (GET sulla pagina principale)."""
+    import json
+    url = get_flaresolverr_url()
+    root = url[:-3] if url.endswith("/v1") else url
+    try:
+        data = json.loads(_http_get(root, HTTP_CONNECT_TIMEOUT))
+        return True, "FlareSolverr %s attivo" % data.get("version", "")
+    except Exception as e:
+        return False, "FlareSolverr: %s" % e
+
+
 def test_connection():
-    """Testa la connessione al server S4Me Assistant.
-    NON avvia l'app automaticamente - testa solo se il server risponde.
-    
+    """
+    Testa la connessione secondo il metodo scelto. NON avvia l'app.
+    Con 'Automatico' basta che uno dei due risponda.
     Returns:
         tuple (success: bool, message: str)
     """
-    logger.info("S4Me: test connessione a %s" % get_base_url())
-    return _raw_test_connection()
+    method = get_cf_method()
+    results = []
+    if method in ("app", "auto"):
+        ok, msg = _raw_test_connection()
+        results.append((ok, ("App: " + msg) if method == "auto" else msg))
+    if method in ("flaresolverr", "auto"):
+        results.append(_test_flaresolverr())
+    success = any(ok for ok, _ in results)
+    return success, " | ".join(msg for _, msg in results)
 
 
 # ============================================================================
@@ -1352,3 +1686,183 @@ def _notify_dns_blocked(domain):
     except Exception:
         pass
     logger.warning("S4Me: dominio %s bloccato dal DNS del provider. Necessario cambio DNS." % domain)
+
+
+# ============================================================================
+# DOWNLOAD E INSTALLAZIONE DELL'APK
+# ============================================================================
+
+DEFAULT_APK_URL = "https://github.com/aandroide/Assistant/releases/latest/download/S4MeAssistant.apk"
+DEFAULT_APK_DIR = "/storage/emulated/0/Download/kodi_apk/"
+
+
+def _apk_download_dir():
+    """Cartella dove salvare l'APK: Download di Android, oppure Download dell'utente su PC."""
+    if _is_android():
+        folder = DEFAULT_APK_DIR
+    else:
+        folder = os.path.join(os.path.expanduser("~"), "Downloads")
+        if not os.path.isdir(folder):
+            folder = os.path.join(config.get_data_path(), "apk")
+    if not os.path.isdir(folder):
+        try:
+            os.makedirs(folder)
+        except Exception:
+            folder = os.path.join(config.get_data_path(), "apk")
+            try:
+                os.makedirs(folder)
+            except Exception:
+                pass
+    return folder
+
+
+def download_apk():
+    """Scarica l'APK dall'indirizzo impostato (o usa un percorso locale) e prova ad avviare l'installazione."""
+    from platformcode import platformtools
+    try:
+        from urllib.request import urlopen, Request
+    except ImportError:
+        from urllib2 import urlopen, Request
+
+    src = str(config.get_setting("s4me_apk_url", default=DEFAULT_APK_URL) or "").strip()
+    if not src:
+        platformtools.dialog_ok("S4Me Assistant", "Imposta prima l'indirizzo del file APK.")
+        return False
+
+    if src.startswith("/"):
+        path = src
+    else:
+        apk_dir = _apk_download_dir()
+        path = os.path.join(apk_dir, os.path.basename(urlparse.urlparse(src).path) or "S4MeAssistant.apk")
+        progress = platformtools.dialog_progress("S4Me Assistant", "Download in corso")
+        try:
+            resp = urlopen(Request(src, headers={"User-Agent": "Mozilla/5.0"}), timeout=30)
+            total = int(resp.info().get("Content-Length") or 0)
+            done = 0
+            with open(path, "wb") as f:
+                while True:
+                    chunk = resp.read(65536)
+                    if not chunk:
+                        break
+                    f.write(chunk)
+                    done += len(chunk)
+                    if total:
+                        progress.update(int(done * 100 / total))
+                    if progress.iscanceled():
+                        raise Exception("annullato")
+        except Exception as e:
+            progress.close()
+            platformtools.dialog_ok("S4Me Assistant", "Download fallito:\n%s" % e)
+            return False
+        progress.close()
+
+    if not os.path.isfile(path):
+        platformtools.dialog_ok("S4Me Assistant", "File non trovato:\n%s" % path)
+        return False
+    if _is_android():
+        import xbmc
+        xbmc.executebuiltin('StartAndroidActivity("","android.intent.action.VIEW",'
+                            '"application/vnd.android.package-archive","file://%s")' % path)
+    if _is_android():
+        platformtools.dialog_ok("S4Me Assistant",
+                                "APK salvato in:\n%s\nSe l'installazione non parte, aprilo dal gestore file." % path)
+    else:
+        platformtools.dialog_ok("S4Me Assistant",
+                                "Questo non e un dispositivo Android: l'APK e stato solo scaricato in:\n%s\n"
+                                "Copialo sul telefono oppure usa il QR code." % path)
+    return True
+
+
+def show_apk_qr():
+    """Mostra a schermo il QR code con l'indirizzo di download dell'APK."""
+    from platformcode import platformtools
+    import xbmc
+    src = str(config.get_setting("s4me_apk_url", default=DEFAULT_APK_URL) or "").strip()
+    if not src or src.startswith("/"):
+        platformtools.dialog_ok("S4Me Assistant", "Imposta prima l'indirizzo web del file APK.")
+        return False
+    try:
+        from lib import segno
+        folder = os.path.join(config.get_data_path(), "apk")
+        if not os.path.isdir(folder):
+            os.makedirs(folder)
+        qr_path = os.path.join(folder, "qr_apk.png")
+        segno.make(src, error="m").save(qr_path, scale=10, border=4)
+    except Exception as e:
+        logger.error("S4Me: QR code non creato: %s" % e)
+        platformtools.dialog_ok("S4Me Assistant", "QR code non creato:\n%s" % e)
+        return False
+    xbmc.executebuiltin('Dialog.Close(addonsettings)')
+    try:
+        import xbmcgui
+
+        def _solid_png(path, rgb):
+            """Crea un PNG 8x8 di un solo colore (serve per sfondo e pulsante)."""
+            import zlib, struct
+            row = b"\x00" + bytes(bytearray(rgb)) * 8
+            raw = row * 8
+
+            def chunk(tag, data):
+                c = struct.pack(">I", len(data)) + tag + data
+                return c + struct.pack(">I", zlib.crc32(tag + data) & 0xffffffff)
+            png = (b"\x89PNG\r\n\x1a\n"
+                   + chunk(b"IHDR", struct.pack(">IIBBBBB", 8, 8, 8, 2, 0, 0, 0))
+                   + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b""))
+            with open(path, "wb") as f:
+                f.write(png)
+
+        black = os.path.join(folder, "bg_nero.png")
+        gray = os.path.join(folder, "btn_grigio.png")
+        blue = os.path.join(folder, "btn_blu.png")
+        _solid_png(black, (0, 0, 0))
+        _solid_png(gray, (70, 70, 70))
+        _solid_png(blue, (30, 110, 200))
+
+        class _QRWindow(xbmcgui.WindowDialog):
+            def __init__(self):
+                xbmcgui.WindowDialog.__init__(self)
+                size = 300
+                x = (1280 - size) // 2
+                y = 110
+                self.addControl(xbmcgui.ControlImage(0, 0, 1280, 720, black))
+                self.addControl(xbmcgui.ControlImage(x, y, size, size, qr_path, aspectRatio=2))
+                self.addControl(xbmcgui.ControlLabel(140, y + size + 20, 1000, 40,
+                                                     "Inquadra il QR code con il telefono per scaricare l'APK",
+                                                     alignment=2))
+                self.btn = xbmcgui.ControlButton((1280 - 220) // 2, y + size + 80, 220, 50, "Esci",
+                                                 focusTexture=blue, noFocusTexture=gray, alignment=2 | 4)
+                self.addControl(self.btn)
+                self.setFocus(self.btn)
+
+            def onControl(self, control):
+                # si confronta l'id: l'oggetto passato da Kodi non e lo stesso di self.btn
+                try:
+                    if control.getId() == self.btn.getId():
+                        self.close()
+                except Exception:
+                    self.close()
+
+            def onClick(self, controlId):
+                if controlId == self.btn.getId():
+                    self.close()
+
+            def onAction(self, action):
+                aid = action.getId()
+                # indietro, menu precedente, stop: chiudono la finestra
+                if aid in (9, 10, 13, 92):
+                    self.close()
+                # clic del mouse o Invio sul pulsante Esci
+                elif aid in (7, 100):
+                    try:
+                        if self.getFocusId() == self.btn.getId():
+                            self.close()
+                    except Exception:
+                        pass
+
+        win = _QRWindow()
+        win.doModal()
+        del win
+    except Exception as e:
+        logger.error("S4Me: finestra QR non disponibile (%s), uso la visualizzazione immagine" % e)
+        xbmc.executebuiltin('ShowPicture(%s)' % qr_path)
+    return True

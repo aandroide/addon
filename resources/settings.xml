@@ -10,7 +10,7 @@
         <setting id="addon_update_timer" type="slider" option="int" range="1,1,24" label="707416" visible="eq(-2,true)" default="1"/>
         <setting label="70787" type="lsep"/>
         <setting id="resolver_dns" type="bool" label="707408" default="true" enable="true" visible="true"/>
-        <setting id="resolver_dns_provider" type="select" label="707409" default="Cloudflare" values="Cloudflare|Google" visible="eq(-1,true)"/>
+        <setting id="resolver_dns_provider" type="select" label="707409" default="Cloudflare" values="Cloudflare|Google|LibreDNS" visible="eq(-1,true)"/>
         <setting id="checkdns" type="bool" default="true" visible="false"/>
         <setting label="70788" type="lsep"/>
         <setting id="debug" type="bool" label="30003" default="false"/>
@@ -140,6 +140,7 @@
         <setting label="30000" type="lsep"/>
         <setting id="touch_view" label='30002' type="bool" default="false"/>
         <setting id="viewchange_notify" label='70514' type="bool" default="false"/>
+        <setting id="tiny_mode" label="Tiny Mode (solo canali essenziali)" type="bool" default="false"/>
         <!-- View Mode (hidden)-->
         <setting id="skin_name" label='Skin Name' type="text" default="skin.estuary" visible="false"/>
         <setting id="view_mode_home" type="action" label="70009" default= "Default, 0" visible="false"/>
@@ -175,11 +176,15 @@
 
     <category label="S4Me Assistant">
         <setting label="S4Me Assistant" type="lsep"/>
-        <setting id="s4me_enabled" type="bool" label="Abilita S4Me Assistant" default="false"/>
-        <setting id="s4me_remote_ip" type="text" label="IP server S4Me Assistant" default="127.0.0.1" visible="eq(-1,true)"/>
-        <setting id="s4me_remote_port" type="number" label="Porta server" default="8787" visible="eq(-2,true)"/>
-        <setting id="s4me_open_app" type="action" label="Apri S4Me Assistant" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX29wZW5fYXBwIiwiY2hhbm5lbCI6InNldHRpbmcifQ==)" visible="eq(-3,true)"/>
-        <setting id="s4me_test" type="action" label="Test connessione" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX3Rlc3QiLCJjaGFubmVsIjoic2V0dGluZyJ9)" visible="eq(-4,true)"/>
-        <setting id="s4me_clear_cookies" type="action" label="Elimina cookie S4Me" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX2NsZWFyX2Nvb2tpZXMiLCJjaGFubmVsIjoic2V0dGluZyJ9)" visible="eq(-5,true)"/>
+        <setting id="s4me_enabled" type="bool" label="Abilita bypass Cloudflare" default="false"/>
+        <setting id="s4me_cf_method" type="select" lvalues="90030|90031|90032" label="Metodo" default="0" visible="eq(-1,true)"/>
+        <setting id="s4me_remote_ip" type="text" label="Indirizzo S4Me Assistant (IP:porta, 127.0.0.1:8787 se sullo stesso dispositivo)" default="127.0.0.1:8787" visible="eq(-2,true)" enable="!eq(-1,1)"/>
+        <setting id="s4me_flaresolverr_url" type="text" label="Indirizzo di FlareSolverr" default="http://127.0.0.1:8191/v1" visible="eq(-3,true)" enable="!eq(-2,0)"/>
+        <setting id="s4me_open_app" type="action" label="Apri S4Me Assistant" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX29wZW5fYXBwIiwiY2hhbm5lbCI6InNldHRpbmcifQ==)" visible="eq(-4,true)" enable="!eq(-3,1)"/>
+        <setting id="s4me_test" type="action" label="Test connessione" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX3Rlc3QiLCJjaGFubmVsIjoic2V0dGluZyJ9)" visible="eq(-5,true)"/>
+        <setting id="s4me_clear_cookies" type="action" label="Elimina cookie S4Me" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX2NsZWFyX2Nvb2tpZXMiLCJjaGFubmVsIjoic2V0dGluZyJ9)" visible="eq(-6,true)"/>
+        <setting id="s4me_apk_url" type="text" label="Indirizzo del file APK di S4Me Assistant" default="https://github.com/aandroide/Assistant/releases/latest/download/S4MeAssistant.apk" visible="eq(-7,true)" enable="!eq(-6,1)"/>
+        <setting id="s4me_download_apk" type="action" label="Scarica e installa l'APK" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX2Rvd25sb2FkX2FwayIsImNoYW5uZWwiOiJzZXR0aW5nIn0=)" visible="eq(-8,true)" enable="!eq(-7,1)"/>
+        <setting id="s4me_show_qr" type="action" label="Mostra QR code dell'APK" action="RunPlugin(plugin://plugin.video.s4me/?eyJhY3Rpb24iOiJzNG1lX3Nob3dfcXIiLCJjaGFubmVsIjoic2V0dGluZyJ9)" visible="eq(-9,true)"/>
     </category>
 </settings>

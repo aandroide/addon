@@ -6524,3 +6524,47 @@ msgstr "Cerca con S4Me"
 msgctxt "#90006"
 msgid "Elementum is already installed"
 msgstr "Elementum è già installato"
+
+msgctxt "#90030"
+msgid "S4Me Assistant"
+msgstr "S4Me Assistant"
+
+msgctxt "#90031"
+msgid "FlareSolverr"
+msgstr "FlareSolverr"
+
+msgctxt "#90032"
+msgid "Automatic"
+msgstr "Automatico"
+
+msgctxt "#90040"
+msgid "Modalita aggiornamento"
+msgstr "Modalita aggiornamento"
+
+msgctxt "#90041"
+msgid "Solo domini dei canali (non tocca l'addon modificato)"
+msgstr "Solo domini dei canali (non tocca l'addon modificato)"
+
+msgctxt "#90042"
+msgid "Aggiornamento completo addon"
+msgstr "Aggiornamento completo addon"
+
+msgctxt "#90043"
+msgid "Aggiornati %d domini dei canali"
+msgstr "Aggiornati %d domini dei canali"
+
+msgctxt "#70991"
+msgid "Modalita' Tiny: mostra solo i canali essenziali"
+msgstr ""
+
+msgctxt "#90044"
+msgid "Sito bloccato dal provider. Prova a cambiare i DNS del dispositivo o del router, oppure usa una VPN"
+msgstr "Sito bloccato dal provider. Prova a cambiare i DNS del dispositivo o del router, oppure usa una VPN"
+
+msgctxt "#90045"
+msgid "Sito bloccato dal provider. Attiva l'override DNS nelle impostazioni Generali, oppure cambia i DNS del dispositivo o del router"
+msgstr "Sito bloccato dal provider. Attiva l'override DNS nelle impostazioni Generali, oppure cambia i DNS del dispositivo o del router"
+
+msgctxt "#90046"
+msgid "Sito bloccato: %s"
+msgstr "Sito bloccato: %s"

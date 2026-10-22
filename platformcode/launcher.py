@@ -10,14 +10,6 @@ from platformcode import config, logger, platformtools
 from platformcode.logger import WebErrorException
 from six.moves import urllib
 
-
-def _close_addon_settings():
-    """Chiude la finestra impostazioni addon."""
-    try:
-        xbmc.executebuiltin('Dialog.Close(addonsettings)')
-    except Exception:
-        pass
-
 def start():
     '''
     First function that is executed when entering the plugin.
@@ -180,9 +172,27 @@ def run(item=None):
             from core import s4me_assistant
             success, message = s4me_assistant.test_connection()
             if success:
-                platformtools.dialog_notification("S4Me Assistant", message, time=5000, sound=False)
+                platformtools.dialog_notification("Test connessione", message, time=5000, sound=False)
             else:
-                platformtools.dialog_notification("S4Me Assistant", "Fallito: " + message, time=5000, sound=False)
+                platformtools.dialog_notification("Test connessione", "Fallito: " + message, time=5000, sound=False)
+
+        # S4Me Assistant: QR code dell'APK
+        elif item.action == "s4me_show_qr":
+            try:
+                from core import s4me_assistant
+                s4me_assistant.show_apk_qr()
+            except Exception as e:
+                platformtools.dialog_notification("S4Me Assistant", "Errore: " + str(e), time=4000, sound=False)
+
+        # S4Me Assistant: scarica e installa l'APK
+        elif item.action == "s4me_download_apk":
+            import xbmc
+            xbmc.executebuiltin('Dialog.Close(addonsettings)')
+            try:
+                from core import s4me_assistant
+                s4me_assistant.download_apk()
+            except Exception as e:
+                platformtools.dialog_notification("S4Me Assistant", "Errore: " + str(e), time=4000, sound=False)
 
         elif item.action == "migrate":
             from platformcode import xbmc_videolibrary

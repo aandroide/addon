@@ -227,6 +227,36 @@ def show_infobox(info_dict):
 
 
 
+# Pagine mostrate dai provider italiani quando il sito e bloccato (Piracy Shield, AGCOM, ADM)
+_BLOCK_MARKERS = ('piracyshield', 'piracy shield', 'accesso al sito bloccato', 'sito bloccato',
+                  'sito oscurato', 'sito web oscurato', 'bloccato per ordine', 'oscurato per ordine',
+                  'oscurato dall', 'bloccato dall', 'sito non raggiungibile per ordine')
+_block_notified = {}
+
+
+def check_isp_block(domain, data, code):
+    """Se la pagina sembra un blocco del provider avvisa l'utente (una volta ogni 10 minuti per dominio)."""
+    try:
+        if not data or len(data) > 20000 or code not in (200, 403, 451, 302):
+            return False
+        low = data.lower() if isinstance(data, str) else data.decode('utf-8', 'ignore').lower()
+        if not any(m in low for m in _BLOCK_MARKERS):
+            return False
+        now = time.time()
+        if now - _block_notified.get(domain, 0) < 600:
+            return True
+        _block_notified[domain] = now
+        logger.error("Sito bloccato dal provider: %s" % domain)
+        import xbmcgui
+        msg_id = 90044 if config.get_setting('resolver_dns') else 90045
+        xbmcgui.Dialog().notification(config.get_localized_string(90046) % domain,
+                                      config.get_localized_string(msg_id),
+                                      xbmcgui.NOTIFICATION_WARNING, 9000)
+        return True
+    except Exception:
+        return False
+
+
 def downloadpage(url, **opt):
     # logger.info()
     """
@@ -291,6 +321,8 @@ def downloadpage(url, **opt):
 
     if opt.get('cloudscraper'):
         from lib import cloudscraper
+        from core import resolverdns
+        resolverdns.install_dns_override()
         session = cloudscraper.create_scraper()
     else:
         from lib import requests
@@ -298,7 +330,16 @@ def downloadpage(url, **opt):
 
         if not opt.get('use_requests', False):
             from core import resolverdns
-            session.mount('https://', resolverdns.CipherSuiteAdapter(domain=domain, override_dns=config.get_setting('resolver_dns')))
+            ciphers = resolverdns.CIPHERS
+            try:
+                # cf_clearance e legato all'impronta TLS del browser: con i cookie gia risolti
+                # si usa la lista di cifrari predefinita invece di quella ridotta (il DNS DoH resta attivo)
+                from core import s4me_assistant
+                if s4me_assistant.is_enabled() and s4me_assistant.has_resolved_cookies(domain):
+                    ciphers = None
+            except Exception:
+                pass
+            session.mount('https://', resolverdns.CipherSuiteAdapter(domain=domain, override_dns=config.get_setting('resolver_dns'), ssl_ciphers=ciphers))
 
     req_headers = default_headers.copy()
 
@@ -323,6 +364,7 @@ def downloadpage(url, **opt):
         try:
             from core import s4me_assistant
             if s4me_assistant.is_enabled():
+                opt['_s4me_t0'] = time.time()  # istante di partenza, serve a capire se i cookie sono vecchi
                 s4me_assistant.load_domain_cookies(domain)
                 opt['_s4me_ua_checked'] = True
                 # In remoto, l'UA globale e gia quello di Kodi (non serve cambiarlo)
@@ -495,10 +537,11 @@ def downloadpage(url, **opt):
         #     ret = downloadpage(urlparse.urlunparse((parse.scheme, cf_proxy['url'], parse.path, parse.params, parse.query, parse.fragment)), **opt)
         #     ret.url = url
         #     return ret
-        logger.info("CloudFlare rilevato per %s - proxy workers disabilitati, in attesa di S4Me Assistant" % domain)
+        logger.info("CloudFlare rilevato per %s (codice %s, tentativo di retry S4Me: %s) - proxy workers disabilitati, in attesa di S4Me Assistant"
+                    % (domain, response_code, bool(opt.get('_s4me_retry'))))
 
     # --- S4Me Assistant: retry dopo protezione CF ---
-    if response_code in [403, 429, 503] and not opt.get('_s4me_retry') and not opt.get('CF'):
+    if response_code in [200, 403, 429, 503] and not opt.get('_s4me_retry') and not opt.get('CF'):
         try:
             from core import s4me_assistant
             if s4me_assistant.is_enabled():
@@ -511,12 +554,15 @@ def downloadpage(url, **opt):
                             opt['headers'] = {}
                         opt['headers']['User-Agent'] = s4me_ua
                     opt['_s4me_retry'] = True
+                    logger.info("S4Me: retry con User-Agent: %s" % str((opt.get('headers') or {}).get('User-Agent', 'predefinito'))[:70])
                     return downloadpage(opt['url_save'], **opt)
         except ImportError:
             pass
         except Exception as e:
             logger.error("S4Me retry error: %s" % str(e))
     # --- Fine S4Me Assistant ---
+
+    check_isp_block(domain, response['data'], response_code)
 
     if not response['data']:
         response['data'] = ''

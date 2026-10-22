@@ -82,7 +82,7 @@ class FlareSolverrManager:
         except Exception as e:
             logger.error("FlareSolverr: Error clearing sessions: %s" % str(e))
     
-    def request(self, url, method="GET", cookies=None, tries=3):
+    def request(self, url, method="GET", cookies=None, tries=3, wait_seconds=0):
         """
         Effettua una richiesta attraverso FlareSolverr
         @param url: URL da richiedere
@@ -108,6 +108,9 @@ class FlareSolverrManager:
         
         if cookies:
             flaresolverr_request["cookies"] = cookies
+        if wait_seconds:
+            # Le versioni recenti leggono i cookie dopo l'attesa; le vecchie ignorano il parametro
+            flaresolverr_request["waitInSeconds"] = int(wait_seconds)
         
         flaresolverr_response = None
         last_error = None
