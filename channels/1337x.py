@@ -157,7 +157,7 @@ def seasons(item):
 
 @support.scrape
 def episodios(item):
-    patron = r'<img src="(?P<thumb>[^"]+)(?:[^>]+>){13}\s*(?P<season>\d+)x(?P<episode>\d+)\s*<span class="seperator">(?:[^>]+>){2}\s*<a href="(?P<url>[^"]+)">(?P<title>[^<]+)'
+    patron = r'<img src="(?P<thumb>[^"]+)"[^>]*Episode Image">.*?<h3><span>\s*(?P<season>\d+)x(?P<episode>\d+)\s*<span class="seperator">.*?</span></span>\s*<a href="(?P<url>[^"]+)">(?P<title>[^<]+)</a>'
     def itemlistHook(itemlist):
         itemlist.reverse()
         return itemlist
@@ -200,7 +200,7 @@ def findvideos(item):
             if sizematch[1].lower() == 'gb':
                 sizenumber = sizenumber * 1024
 
-            itemlist.append(item.clone(title = '{} [{} SEEDS] [{}]'.format(title, seed, size), seed=int(seed), size=sizenumber, url=host + url, server='torrent', action='play'))
+            itemlist.append(item.clone(title = '{} [{} SEEDS] [{}]'.format(title, seed, size), seed=int(seed), size=sizenumber, url=(url if url.startswith('http') else host + url), server='torrent', action='play'))
         itemlist.sort(key=lambda it: (it.seed, it.size), reverse=True)
 
     Videolibrary = True if 'movie' in item.args else False
